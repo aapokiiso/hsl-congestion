@@ -1,0 +1,11 @@
+{
+  "name": "hsl-congestion",
+  "version": "1.0.0",
+  "description": "Live congestion data for HSL transport",
+  "main": "index.js",
+  "author": "Aapo Kiiso",
+  "dependencies": {
+    "geolib": "^2.0.22",
+    "request": "^2.81.0"
+  }
+}
