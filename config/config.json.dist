@@ -1,0 +1,22 @@
+{
+    "httpPort": 80,
+    "db": {
+        "host": "localhost",
+        "port": 3306,
+        "name": "hslcongestion",
+        "username": "",
+        "password": "",
+        "forceSync": false
+    },
+    "ssl": {
+        "enabled": false,
+        "key": "",
+        "cert": "",
+        "ca": ""
+    },
+    "publicDir": "/dist",
+    "webpack": {
+        "watch": false,
+        "hot": false
+    }
+}

@@ -1,0 +1,26 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Dependency directories
+node_modules
+
+### JetBrains
+/.idea
+
+# App
+/config/*.json
+/dist
+
+# Let's Encrypt
+/.well-known
+
+# OS X
+*.DS_STORE
