@@ -78,7 +78,7 @@ module.exports = {
             initConnection() // Promise returning Sequelize instance.
                 .then(seq => sequelize = seq) // Cache instance in case init() is called multiple times.
                 .then(() => importModels(sequelize))
-                // .then(() => syncDb(sequelize))
+                .then(() => syncDb(sequelize))
                 .then(() => resolve(sequelize))
                 .catch(reject);
         });
