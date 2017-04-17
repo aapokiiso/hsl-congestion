@@ -4,7 +4,7 @@ const mqtt = require('mqtt');
 const config = require('../config');
 const sequelize = require('../sequelize');
 
-const routeId = {};
+const routeIds = {};
 
 sequelize.init()
     .then(initMqtt);
@@ -57,18 +57,18 @@ function saveVehiclePosition(models, {
 }
 
 function getRouteId(models, routeName) {
-    if (routeId[routeName]) {
-        return Promise.resolve(routeId[routeName]);
+    if (routeIds[routeName]) {
+        return Promise.resolve(routeIds[routeName]);
     }
 
     return models.Route.findOne({where: {name: routeName}})
         .then(route => {
             if (!route) {
-                throw {message: `Route ${routeName} not found.`};
+                throw {message: `Route '${routeName}' not found.`};
             }
 
-            routeId[routeName] = route.get('id');
+            routeIds[routeName] = route.get('id');
 
-            return routeId[routeName];
+            return routeIds[routeName];
         });
 }

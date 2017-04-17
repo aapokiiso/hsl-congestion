@@ -25,6 +25,7 @@ const envJson = require('./config/' + envName + '.json');
  * @property {String} mqtt.host
  * @property {number} mqtt.port
  * @property {String} mqtt.topic
+ * @property {String} graphql.url
  * @property {String} env
  * @property {Function} isProduction
  */
