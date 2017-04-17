@@ -6,8 +6,7 @@ module.exports = function (sequelize, DataTypes) {
     const VehiclePosition = sequelize.define('VehiclePosition', {
         vehicleId: {
             type: DataTypes.STRING,
-            allowNull: false,
-            primaryKey: true
+            allowNull: false
         },
         direction: {
             type: DataTypes.INTEGER,
