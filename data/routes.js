@@ -33,20 +33,13 @@ function getRoutes(models) {
             headers: {
                 'Content-Type': 'application/json'
             }
-        }, (err, response, body) => {
+        }, (err, res, resJson) => {
             if (err) {
                 return reject(err);
             }
 
-            let json;
-            try {
-                json = JSON.parse(body);
-            } catch (e) {
-                json = {};
-            }
-
             // Remove extra layers from JSON
-            const routes = json['data']['routes'];
+            const routes = resJson['data']['routes'];
 
             return resolve(routes);
         });

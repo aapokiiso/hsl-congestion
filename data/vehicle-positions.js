@@ -43,7 +43,7 @@ function saveVehiclePosition(models, {
 }) {
     return getRouteId(models, routeName)
         .then(routeId => {
-            return VehiclePosition.create({
+            return models.VehiclePosition.create({
                 routeId,
                 vehicleId,
                 direction,
