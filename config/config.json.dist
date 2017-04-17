@@ -18,5 +18,10 @@
     "webpack": {
         "watch": false,
         "hot": false
+    },
+    "mqtt": {
+        "host": "mqtt.hsl.fi",
+        "port": 1883,
+        "topic": "/hfp/journey/tram/#"
     }
 }

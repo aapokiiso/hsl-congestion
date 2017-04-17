@@ -4,7 +4,7 @@ const config = require('../config');
 
 module.exports = function (sequelize, DataTypes) {
     const Route = sequelize.define('Route', {
-        routeId: {
+        id: {
             type: DataTypes.STRING,
             allowNull: false,
             primaryKey: true

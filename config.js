@@ -22,6 +22,9 @@ const envJson = require('./config/' + envName + '.json');
  * @property {String} publicDir
  * @property {boolean} webpack.watch
  * @property {boolean} webpack.hot
+ * @property {String} mqtt.host
+ * @property {number} mqtt.port
+ * @property {String} mqtt.topic
  * @property {String} env
  * @property {Function} isProduction
  */

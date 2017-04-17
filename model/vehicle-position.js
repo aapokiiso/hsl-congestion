@@ -21,6 +21,9 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.DOUBLE,
             allowNull: false
         },
+        speed: {
+            type: DataTypes.INTEGER
+        },
         timestamp: {
             type: DataTypes.INTEGER,
             comment: 'From vehicle',

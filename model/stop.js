@@ -4,7 +4,7 @@ const config = require('../config');
 
 module.exports = function (sequelize, DataTypes) {
     const Stop = sequelize.define('Stop', {
-        stopId: {
+        id: {
             type: DataTypes.STRING,
             allowNull: false,
             primaryKey: true
