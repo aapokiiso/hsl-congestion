@@ -27,10 +27,12 @@ function getRoutes(models) {
             }
         }`;
 
-        request({
-            url: config.graphql.url, 
-            method: config.graphql.method,
-            body: {query}
+        request.post(config.graphql.url, {
+            body: {query},
+            json: true,
+            headers: {
+                'Content-Type': 'application/json'
+            }
         }, (err, response, body) => {
             if (err) {
                 return reject(err);
