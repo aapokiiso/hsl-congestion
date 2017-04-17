@@ -22,7 +22,7 @@
     "mqtt": {
         "host": "mqtt.hsl.fi",
         "port": 1883,
-        "topic": "/hfp/journey/tram/#"
+        "topic": "/hfp/journey/tram/+/1009/#"
     },
     "graphql": {
         "url": "https://api.digitransit.fi/routing/v1/routers/finland/index/graphql"
