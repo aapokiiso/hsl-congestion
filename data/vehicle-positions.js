@@ -53,7 +53,10 @@ function saveVehiclePosition(models, {
                 timestamp
             });
         })
-        .catch(err => err && err.message ? console.error(err.message) : console.error(err));
+        .catch(err => {
+            const message = err && err.message ? err.message : err;
+            console.error(`Error: ${message}`);
+        });
 }
 
 function getRouteId(models, routeName) {
