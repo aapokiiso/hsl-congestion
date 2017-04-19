@@ -10,10 +10,12 @@ sequelize.init()
     .then(seq => {
         return getRoutes(seq.models)
             .then(routes => Promise.all(
-                routes.map(route => getRouteStops(seq.models, route))
+                routes.map(route => getRouteStopsData(seq.models, route))
             ))
-            .then((routeStops) => Promise.all(
-                routeStops.map(({route, stops}) => stops.map(stop => saveStopToRoute(seq.models, route, stop)))
+            .then((routeStopsData) => Promise.all(
+                routeStopsData.map(({route, stopsData}) => Promise.all(
+                    stopsData.map(stopData => saveStop(seq.models, route, stopData))
+                    ).then(stops => route.addStops(stops)))
             ));
     })
     .catch(err => {
@@ -25,7 +27,7 @@ function getRoutes(models) {
     return models.Route.findAll();
 }
 
-function getRouteStops(models, route) {
+function getRouteStopsData(models, route) {
     return new Promise((resolve, reject) => {
         const query = `{
             route(id: "${route.get('gtfsId')}") {
@@ -58,7 +60,7 @@ function getRouteStops(models, route) {
     });
 }
 
-function saveStopToRoute(models, route, {id, gtfsId, name, lat: latitude, lon: longitude}) {
+function saveStop(models, route, {id, gtfsId, name, lat: latitude, lon: longitude}) {
     return models.Stop.findOrCreate({
         where: {
             id
@@ -87,6 +89,5 @@ function saveStopToRoute(models, route, {id, gtfsId, name, lat: latitude, lon: l
 
             return stop.save();
         }
-    })
-    .then(stop => route.addStop(stop));
+    });
 }
