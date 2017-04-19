@@ -36,13 +36,13 @@ function getRoutes(models) {
             headers: {
                 'Content-Type': 'application/json'
             }
-        }, (err, res, resJson) => {
+        }, (err, res, json) => {
             if (err) {
                 return reject(err);
             }
 
             // Remove extra layers from JSON
-            const routes = resJson['data']['routes'];
+            const routes = json['data']['routes'];
 
             return resolve(routes);
         });
