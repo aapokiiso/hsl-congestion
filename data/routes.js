@@ -13,10 +13,7 @@ sequelize.init()
                 routes.map(route => saveRoute(seq.models, route))
             ));
     })
-    .catch(err => {
-        const message = err && err.message ? err.message : err;
-        console.error(`Error: ${message}`);
-    });
+    .catch(err => console.error(`Error: ${err.message}`, err.stack));
 
 function getRoutes(models) {
     return new Promise((resolve, reject) => {
@@ -64,7 +61,7 @@ function saveRoute(models, {id, mode: typeCode, gtfsId, shortName: name}) {
             })
             .then(([route, created]) => {
                 if (!route) {
-                    throw {message: `Route '${name}' not found and could not be created.`};
+                    throw new Error(`Route '${name}' not found and could not be created.`);
                 }
 
                 if (created) {
@@ -91,7 +88,7 @@ function getRouteTypeId(models, typeCode) {
         .findOrCreate({where: {code: typeCode.trim().toLowerCase()}})
         .then(([type, created]) => {
             if (!type) {
-                throw {message: `Route type '${typeCode}' not found and could not be created.`};
+                throw new Error(`Route type '${typeCode}' not found and could not be created.`);
             }
 
             routeTypeIds[typeCode] = type.get('id');

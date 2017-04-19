@@ -53,10 +53,7 @@ function saveVehiclePosition(models, {
                 timestamp
             });
         })
-        .catch(err => {
-            const message = err && err.message ? err.message : err;
-            console.error(`Error: ${message}`);
-        });
+        .catch(err => console.error(`Error: ${err.message}`, err.stack));
 }
 
 function getRouteId(models, routeName) {
@@ -67,7 +64,7 @@ function getRouteId(models, routeName) {
     return models.Route.findOne({where: {name: routeName}})
         .then(route => {
             if (!route) {
-                throw {message: `Route '${routeName}' not found.`};
+                throw new Error(`Route '${routeName}' not found.`);
             }
 
             routeIds[routeName] = route.get('id');

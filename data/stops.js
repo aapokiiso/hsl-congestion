@@ -17,16 +17,14 @@ sequelize.init()
                     const saveStops = Promise.all(
                         stopsData.map(stopData => saveStop(seq.models, route, stopData))
                     );
+                    console.log(route.addStops)
                     saveStops.then(route.addStops);
 
                     return saveStops;
                 })
             ));
     })
-    .catch(err => {
-        const message = err && err.message ? err.message : err;
-        console.error(`Error: ${message}`);
-    });
+    .catch(err => console.error(`Error: ${err.message}`, err.stack));
 
 function getRoutes(models) {
     return models.Route.findAll();
@@ -79,7 +77,7 @@ function saveStop(models, route, {id, gtfsId, name, lat: latitude, lon: longitud
     })
     .then(([stop, created]) => {
         if (!stop) {
-            throw {message: `Stop '${name}' not found and could not be created.`};
+            throw new Error(`Stop '${name}' not found and could not be created.`);
         }
 
         if (created) {
