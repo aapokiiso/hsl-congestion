@@ -12,10 +12,15 @@ sequelize.init()
             .then(routes => Promise.all(
                 routes.map(route => getRouteStopsData(seq.models, route))
             ))
-            .then((routeStopsData) => Promise.all(
-                routeStopsData.map(({route, stopsData}) => Promise.all(
-                    stopsData.map(stopData => saveStop(seq.models, route, stopData))
-                    ).then(stops => route.addStops(stops)))
+            .then(routeStopsData => Promise.all(
+                routeStopsData.map(({route, stopsData}) => {
+                    const saveStops = Promise.all(
+                        stopsData.map(stopData => saveStop(seq.models, route, stopData))
+                    );
+                    saveStops.then(route.addStops);
+
+                    return saveStops;
+                })
             ));
     })
     .catch(err => {
@@ -53,9 +58,9 @@ function getRouteStopsData(models, route) {
             }
 
             // Remove extra layers from JSON
-            const stops = json['data']['route']['stops'];
+            const stopsData = json['data']['route']['stops'];
 
-            return resolve({route, stops});
+            return resolve({route, stopsData});
         });
     });
 }
