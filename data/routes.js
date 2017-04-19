@@ -62,8 +62,7 @@ function saveRoute(models, {id, mode: typeCode, gtfsId, shortName: name}) {
                     name
                 }
             })
-            // Sequelize 'spread' is 'then' with spreaded obj props as args
-            .spread((route, created) => {
+            .then(([route, created]) => {
                 if (!route) {
                     throw {message: `Route '${name}' not found and could not be created.`};
                 }
@@ -90,8 +89,7 @@ function getRouteTypeId(models, typeCode) {
 
     return models.RouteType
         .findOrCreate({where: {code: typeCode.trim().toLowerCase()}})
-        // Sequelize 'spread' is 'then' with spreaded obj props as args
-        .spread((type, created) => {
+        .then(([type, created]) => {
             if (!type) {
                 throw {message: `Route type '${typeCode}' not found and could not be created.`};
             }
