@@ -13,7 +13,7 @@ sequelize.init()
                 routes.map(route => saveRoute(seq.models, route))
             ));
     })
-    .catch(err => console.error(`Error: ${err.message}`, err.stack));
+    .catch(err => console.error('Error:', err));
 
 function getRoutes(models) {
     return new Promise((resolve, reject) => {

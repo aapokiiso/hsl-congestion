@@ -18,11 +18,6 @@ module.exports = function (sequelize, DataTypes) {
             allowNull: false
         }
     });
-    
-    let Stop = sequelize.models.Stop;
-    if (!Stop) {
-        Stop = require('./stop')(sequelize, DataTypes);
-    }
 
     let RouteType = sequelize.models.RouteType;
     if (!RouteType) {
@@ -30,7 +25,6 @@ module.exports = function (sequelize, DataTypes) {
     }
 
     Route.belongsTo(RouteType, {as: 'type'});
-    Route.belongsToMany(Stop, {through: 'RouteStop'});
 
     return Route;
 };

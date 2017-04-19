@@ -26,13 +26,13 @@ module.exports = function (sequelize, DataTypes) {
             allowNull: false
         }
     });
-    
+
     let Route = sequelize.models.Route;
     if (!Route) {
         Route = require('./route')(sequelize, DataTypes);
     }
 
-    Stop.belongsToMany(Route, {through: 'RouteStop'});
+    Stop.belongsTo(Route, {as: 'route'});
 
     return Stop;
 };

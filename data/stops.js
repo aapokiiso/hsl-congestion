@@ -12,22 +12,16 @@ sequelize.init()
             .then(routes => Promise.all(
                 routes.map(route => getRouteStopsData(seq.models, route))
             ))
-            .then(routeStopsData => Promise.all(
-                routeStopsData.map(({route, stopsData}) => {
-                    const saveStops = Promise.all(
-                        stopsData.map(stopData => saveStop(seq.models, route, stopData))
-                    );
-                    console.log(route.addStops)
-                    saveStops.then(route.addStops);
+            .then(routeStopsData => routeStopsData.map(({route, stopsData}) => {
+                const saveStops = stopsData.map(stopData => saveStopToRoute(seq.models, route, stopData));
 
-                    return saveStops;
-                })
-            ));
+                return Promise.all(saveStops);
+            }));
     })
-    .catch(err => console.error(`Error: ${err.message}`, err.stack));
+    .catch(err => console.error('Error:', err));
 
 function getRoutes(models) {
-    return models.Route.findAll();
+    return models.Route.findAll({where: {name: '9'}}); // @tood remove 9
 }
 
 function getRouteStopsData(models, route) {
@@ -63,12 +57,13 @@ function getRouteStopsData(models, route) {
     });
 }
 
-function saveStop(models, route, {id, gtfsId, name, lat: latitude, lon: longitude}) {
+function saveStopToRoute(models, route, {id, gtfsId, name, lat: latitude, lon: longitude}) {
     return models.Stop.findOrCreate({
         where: {
             id
         }, 
         defaults: {
+            routeId: route.get('id')
             gtfsId,
             name,
             latitude,
@@ -85,6 +80,7 @@ function saveStop(models, route, {id, gtfsId, name, lat: latitude, lon: longitud
         } else {
             // Update stop before returning
             stop
+                .set('routeId', route.get('id'))
                 .set('gtfsId', gtfsId)
                 .set('name', name)
                 .set('latitude', latitude)
