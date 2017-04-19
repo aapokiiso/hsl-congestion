@@ -21,7 +21,7 @@ sequelize.init()
     .catch(err => console.error('Error:', err));
 
 function getRoutes(models) {
-    return models.Route.findAll({where: {name: '9'}}); // @tood remove 9
+    return models.Route.findAll();
 }
 
 function getRouteStopsData(models, route) {
@@ -63,7 +63,7 @@ function saveStopToRoute(models, route, {id, gtfsId, name, lat: latitude, lon: l
             id
         }, 
         defaults: {
-            routeId: route.get('id')
+            routeId: route.get('id'),
             gtfsId,
             name,
             latitude,
