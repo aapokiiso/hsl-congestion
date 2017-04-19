@@ -12,8 +12,8 @@ sequelize.init()
             .then(routes => Promise.all(
                 routes.map(route => getRouteStops(seq.models, route))
             ))
-            .then(({route, stops}) => Promise.all(
-                stops.map(stop => saveStopToRoute(seq.models, route, stop))
+            .then((routeStops) => Promise.all(
+                routeStops.map(({route, stops}) => stops.map(stop => saveStopToRoute(seq.models, route, stop)))
             ));
     })
     .catch(err => {
@@ -28,7 +28,7 @@ function getRoutes(models) {
 function getRouteStops(models, route) {
     return new Promise((resolve, reject) => {
         const query = `{
-            routes(id: "${route.get('gtfsId')}") {
+            route(id: "${route.get('gtfsId')}") {
                 stops {
                     id
                     gtfsId
@@ -75,8 +75,6 @@ function saveStopToRoute(models, route, {id, gtfsId, name, lat: latitude, lon: l
             throw {message: `Stop '${name}' not found and could not be created.`};
         }
 
-        route.addStop(stop);
-
         if (created) {
             return stop;
         } else {
@@ -89,5 +87,6 @@ function saveStopToRoute(models, route, {id, gtfsId, name, lat: latitude, lon: l
 
             return stop.save();
         }
-    });
+    })
+    .then(stop => route.addStop(stop));
 }
