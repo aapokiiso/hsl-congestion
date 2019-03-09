@@ -1,0 +1,17 @@
+{
+    "name": "hsl-congestion-tram-7-backend",
+    "version": "1.0.0",
+    "description": "Congestion tracking for Helsinki tram number 7 (backend)",
+    "author": "Aapo Kiiso",
+    "scripts": {
+        "start": "node ./service/track-sevens"
+    },
+    "dependencies": {
+        "mqtt": "^2.18.8",
+        "mysql2": "^1.6.5",
+        "request": "^2.88.0",
+        "request-promise-native": "^1.0.7",
+        "sequelize": "^4.43.0"
+    },
+    "devDependencies": {}
+}
