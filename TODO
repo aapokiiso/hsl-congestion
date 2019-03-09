@@ -1,0 +1,10 @@
+MVP (onkoseiskatäynnä.fi):
+- As a User, I want to see the congestion of upcoming trams number 7 and 7H for a given stop,
+  to estimate how many people have boarded it from or to the Länsisatama harbor.
+- As a User, I want to be able to automatically see upcoming trams for my nearest stop
+- As a User, I want to be able to toggle direction of shown tram for the chosen stop
+- As a Frontend, I want to get congestion level (0-100) of a given tram from a Backend
+- As a Frontend, I want to get list of upcoming trams on a given stop from a Backend
+- As a Backend, I want to store tram doors-open stop times into a Database.
+- As a Backend, I want to get all doors-open stop times for an ongoing tram journey from a Database.
+- As a Database, I want to model stop times in relation to trams and stops.

@@ -1,0 +1,25 @@
+{
+    "httpPort": 80,
+    "db": {
+        "dialect": "mysql",
+        "host": "localhost",
+        "port": 3306,
+        "name": "hslcongestion",
+        "username": "",
+        "password": "",
+        "forceSync": false
+    },
+    "ssl": {
+        "enabled": false,
+        "key": "",
+        "cert": "",
+        "ca": ""
+    },
+    "mqtt": {
+        "host": "mqtt.hsl.fi",
+        "port": 1883
+    },
+    "graphql": {
+        "url": "https://api.digitransit.fi/routing/v1/routers/hsl/index/graphql"
+    }
+}

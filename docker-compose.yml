@@ -1,0 +1,34 @@
+version: '3'
+services:
+    database:
+        image: mariadb
+        networks:
+            app:
+            phpmyadmin:
+                aliases:
+                    - db
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: hslcongestion
+            MYSQL_USER: root
+            MYSQL_PASSWORD: root
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        networks:
+            - phpmyadmin
+        ports:
+            - 80
+        depends_on:
+            - database
+    app:
+        build:
+            context: ./app
+        volumes: &appvolumes
+            - ./app:/usr/app
+        networks:
+            - app
+        depends_on:
+            - database
+networks:
+    app:
+    phpmyadmin:

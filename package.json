@@ -1,49 +1,14 @@
 {
-  "name": "hsl-congestion",
-  "version": "1.0.0",
-  "description": "Live congestion data for HSL transport",
-  "main": "server.js",
-  "author": "Aapo Kiiso",
-  "scripts": {
-    "start": "./node_modules/nodemon/bin/nodemon.js --ignore ./public ./server.js",
-    "daemon:start": "./node_modules/forever/bin/forever start server.js",
-    "daemon:stop": "./node_modules/forever/bin/forever stop server.js",
-    "daemon:restart": "./node_modules/forever/bin/forever restart server.js",
-    "build": "./node_modules/webpack/bin/webpack.js --config webpack.config.js"
-  },
-  "dependencies": {
-    "basic-auth": "^1.1.0",
-    "body-parser": "^1.15.2",
-    "express": "^4.14.0",
-    "express-enforces-ssl": "^1.1.0",
-    "forever": "^0.15.3",
-    "hsts": "^2.0.0",
-    "idb": "^2.0.0",
-    "mkdirp": "^0.5.1",
-    "mqtt": "^2.6.2",
-    "mysql": "^2.12.0",
-    "request": "^2.81.0",
-    "sequelize": "^3.28.0",
-    "socket.io": "^1.7.2",
-    "socket.io-client": "^1.7.2",
-    "vue": "^2.1.8"
-  },
-  "devDependencies": {
-    "babel-core": "^6.21.0",
-    "babel-loader": "^6.2.10",
-    "babel-preset-es2015": "^6.18.0",
-    "css-loader": "^0.26.1",
-    "ejs": "^2.5.5",
-    "eslint": "^3.12.2",
-    "file-loader": "^0.9.0",
-    "node-sass": "^4.3.0",
-    "nodemon": "^1.11.0",
-    "sass-loader": "^4.1.1",
-    "vue-loader": "^10.0.2",
-    "vue-template-compiler": "^2.1.8",
-    "webpack": "^2.4.1",
-    "webpack-dev-middleware": "^1.9.0",
-    "webpack-hot-middleware": "^2.15.0",
-    "webpack-manifest-plugin": "^1.1.0"
-  }
+    "name": "hsl-congestion-tram-7",
+    "version": "1.0.0",
+    "description": "Congestion tracking for Helsinki tram number 7",
+    "author": "Aapo Kiiso",
+    "scripts": {
+        "lint": "eslint ."
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "babel-eslint": "^10.0.1",
+        "eslint": "^5.15.1"
+    }
 }
