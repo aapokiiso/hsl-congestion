@@ -8,7 +8,7 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.INTEGER,
             allowNull: false,
             primaryKey: true,
-            comment: 'Internal Journey ID from HSL Realtime API'
+            comment: 'Internal Journey ID from HSL Realtime API',
         },
         departureDate: {
             type: DataTypes.STRING,
@@ -21,7 +21,7 @@ module.exports = function (sequelize, DataTypes) {
     });
 
     const RoutePattern = sequelize.models.RoutePattern || require('./route-pattern')(sequelize, DataTypes);
-    Trip.belongsTo(RoutePattern, {as: 'routePattern'});
+    Trip.belongsTo(RoutePattern, { as: 'routePattern' });
 
     const routePatternIdCache = {};
 
@@ -34,7 +34,7 @@ module.exports = function (sequelize, DataTypes) {
             return routePatternIdCache[cacheKey];
         }
 
-        const {fuzzyTrip: trip} = await queryGraphql(`{
+        const { fuzzyTrip: trip } = await queryGraphql(`{
             fuzzyTrip(route: "${routeGtfsId}", direction: ${directionId}, date: "${departureDate}", time: ${departureTimeSeconds}) {
                 pattern {
                     code
@@ -46,7 +46,7 @@ module.exports = function (sequelize, DataTypes) {
             throw new Error(`Trip details not found for route ID ${routeGtfsId}, direction ${directionId}, departure date ${departureDate}, departure time ${departureTime}`);
         }
 
-        const {code: routePatternId} = trip.pattern;
+        const { code: routePatternId } = trip.pattern;
 
         routePatternIdCache[cacheKey] = routePatternId;
 

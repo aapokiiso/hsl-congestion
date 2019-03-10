@@ -8,27 +8,27 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull: false,
             primaryKey: true,
-            comment: 'GTFS ID in HSL Routing API'
+            comment: 'GTFS ID in HSL Routing API',
         },
         name: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
         },
         latitude: {
             type: DataTypes.DOUBLE,
-            allowNull: false
+            allowNull: false,
         },
         longitude: {
             type: DataTypes.DOUBLE,
-            allowNull: false
-        }
+            allowNull: false,
+        },
     });
 
     const RoutePattern = sequelize.models.RoutePattern || require('./route-pattern')(sequelize, DataTypes);
-    Stop.belongsTo(RoutePattern, {as: 'routePattern'});
+    Stop.belongsTo(RoutePattern, { as: 'routePattern' });
 
     Stop.createAllFromApi = async function (routePattern) {
-        const {pattern} = await queryGraphql(`{
+        const { pattern } = await queryGraphql(`{
             pattern(id: "${routePattern.get('id')}") {
                 stops {
                     gtfsId
@@ -39,15 +39,15 @@ module.exports = function (sequelize, DataTypes) {
             }
         }`);
 
-        const {stops} = pattern;
+        const { stops } = pattern;
 
         return stops.map(
             function createStop({
-                                    gtfsId: id,
-                                    name,
-                                    lat: latitude,
-                                    lon: longitude
-                                }) {
+                gtfsId: id,
+                name,
+                lat: latitude,
+                lon: longitude,
+            }) {
                 return Stop.create({
                     routePatternId: routePattern.get('id'),
                     id,

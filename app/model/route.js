@@ -8,7 +8,7 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull: false,
             primaryKey: true,
-            comment: 'GTFS ID in HSL Routing API'
+            comment: 'GTFS ID in HSL Routing API',
         },
         mode: {
             type: DataTypes.STRING,
@@ -16,7 +16,7 @@ module.exports = function (sequelize, DataTypes) {
         },
         name: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
         },
     });
 
@@ -30,19 +30,19 @@ module.exports = function (sequelize, DataTypes) {
             return existingRoute;
         }
 
-        const {route} = await queryGraphql(`{
+        const { route } = await queryGraphql(`{
             route(id: "${id}") {
                 mode
                 shortName
             }
         }`);
 
-        const {mode, shortName: name} = route;
+        const { mode, shortName: name } = route;
 
         return Route.create({
             id,
             mode,
-            name
+            name,
         });
     };
 

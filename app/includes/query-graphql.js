@@ -12,14 +12,14 @@ const appConfig = require('../config');
  */
 
 module.exports = async function queryGraphql(query) {
-    const {data: result} = await request.post(appConfig.graphql.url, {
+    const { data: result } = await request.post(appConfig.graphql.url, {
         body: {
             query,
         },
         json: true,
         headers: {
-            'Content-Type': 'application/json'
-        }
+            'Content-Type': 'application/json',
+        },
     });
 
     return result;

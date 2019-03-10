@@ -58,14 +58,14 @@ async function syncDb(sequelize) {
     const shouldForceSync = appConfig.db.forceSync;
 
     if (shouldForceSync) {
-        await sequelize.query('SET FOREIGN_KEY_CHECKS = 0;', {raw: true});
+        await sequelize.query('SET FOREIGN_KEY_CHECKS = 0;', { raw: true });
     }
 
     // Promise.resolve ensures thenable Promise even in production (disableKeyChecks is undefined)
-    await sequelize.sync({force: shouldForceSync});
+    await sequelize.sync({ force: shouldForceSync });
 
     if (shouldForceSync) {
-        await sequelize.query('SET FOREIGN_KEY_CHECKS = 1;', {raw: true});
+        await sequelize.query('SET FOREIGN_KEY_CHECKS = 1;', { raw: true });
     }
 }
 

@@ -16,7 +16,7 @@ const db = require('../db');
         const routeId = parseRouteIdFromTopic(topic);
 
         try {
-            const {VP: vehiclePosition} = JSON.parse(messageStr);
+            const { VP: vehiclePosition } = JSON.parse(messageStr);
             await saveVehiclePosition(routeId, vehiclePosition);
         } catch (e) {
             console.error(e, messageStr);
@@ -45,9 +45,9 @@ const db = require('../db');
         long: longitude,
         tsi: timestamp,
         oday: departureDate,
-        start: departureTime
+        start: departureTime,
     }) {
-        const {RoutePattern, Trip, VehiclePosition} = dbInstance.models;
+        const { RoutePattern, Trip, VehiclePosition } = dbInstance.models;
 
         const directionId = RoutePattern.getRoutingApiDirectionId(realtimeApiDirectionId);
         const routePatternId = await Trip.searchRoutePatternIdFromApi(routeId, directionId, departureDate, departureTime);
@@ -59,15 +59,15 @@ const db = require('../db');
                 id: journeyId,
                 routePatternId: routePattern.get('id'),
                 departureDate,
-                departureTime
-            }
+                departureTime,
+            },
         });
 
         return VehiclePosition.create({
             tripId: trip.get('id'),
             latitude,
             longitude,
-            timestamp
+            timestamp,
         });
     }
 }());

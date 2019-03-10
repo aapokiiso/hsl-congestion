@@ -31,5 +31,5 @@ module.exports = Object.assign({}, envJson, {
     env: envName,
     isProduction() {
         return this.env === ENV_PRODUCTION;
-    }
+    },
 });
