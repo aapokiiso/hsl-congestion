@@ -16,7 +16,7 @@ node_modules
 /.idea
 
 # App
-/app/config/*.json
+/config/*.json
 
 # Let's Encrypt
 /.well-known
