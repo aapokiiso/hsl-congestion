@@ -16,10 +16,7 @@ const envJson = require(`./config/${envName}.json`);
  * @property {String} db.username
  * @property {String} db.password
  * @property {boolean} db.forceSync
- * @property {boolean} ssl.enabled
- * @property {String} ssl.key
- * @property {String} ssl.cert
- * @property {String} ssl.ca
+ * @property {boolean} db.logging
  * @property {String} mqtt.host
  * @property {number} mqtt.port
  * @property {String} mqtt.topic

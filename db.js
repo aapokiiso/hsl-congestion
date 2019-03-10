@@ -19,6 +19,7 @@ function initConnection() {
             port: appConfig.db.port,
             dialect: appConfig.db.dialect,
             operatorsAliases: Sequelize.Op,
+            logging: appConfig.db.logging,
         }
     );
 }
@@ -62,7 +63,6 @@ async function syncDb(sequelize) {
         await sequelize.query('SET FOREIGN_KEY_CHECKS = 0;', { raw: true });
     }
 
-    // Promise.resolve ensures thenable Promise even in production (disableKeyChecks is undefined)
     await sequelize.sync({ force: shouldForceSync });
 
     if (shouldForceSync) {

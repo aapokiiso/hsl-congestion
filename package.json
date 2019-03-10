@@ -6,7 +6,8 @@
     "scripts": {
         "lint": "eslint .",
         "lint:fix": "eslint . --fix",
-        "track-stop-times": "node ./script/track-stop-times"
+        "track-stop-times": "node ./script/track-stop-times",
+        "start": "node ./server"
     },
     "husky": {
         "hooks": {
@@ -14,6 +15,7 @@
         }
     },
     "dependencies": {
+        "express": "^4.16.4",
         "geolib": "^2.0.24",
         "mqtt": "^2.18.8",
         "mysql2": "^1.6.5",

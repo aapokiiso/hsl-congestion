@@ -1,5 +1,4 @@
 {
-    "httpPort": 80,
     "db": {
         "dialect": "mysql",
         "host": "localhost",
@@ -7,7 +6,8 @@
         "name": "hslcongestion",
         "username": "",
         "password": "",
-        "forceSync": false
+        "forceSync": false,
+        "logging": false
     },
     "ssl": {
         "enabled": false,

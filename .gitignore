@@ -17,6 +17,7 @@ node_modules
 
 # App
 /config/*.json
+/app.yaml
 
 # Let's Encrypt
 /.well-known
