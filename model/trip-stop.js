@@ -7,6 +7,11 @@ module.exports = function (sequelize, DataTypes) {
             allowNull: false,
             comment: 'UNIX timestamp',
         },
+        doorsOpen: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false,
+        },
     }, {
         timestamps: false,
     });
@@ -81,6 +86,7 @@ module.exports = function (sequelize, DataTypes) {
             where: {
                 tripId: trip.get('id'),
                 stopId: stop.get('id'),
+                doorsOpen: true,
             },
             order: [
                 ['seenAtStop', 'ASC'],

@@ -27,7 +27,7 @@ module.exports = function (sequelize, DataTypes) {
 
     const routePatternIdCache = {};
 
-    Trip.searchRoutePatternIdFromApi = async function (routeId, directionId, departureDate, departureTime) {
+    Trip.searchRoutePatternIdFromApi = function (routeId, directionId, departureDate, departureTime) {
         const routeGtfsId = sequelize.models.Route.getGtfsId(routeId);
         const departureTimeSeconds = Trip.getDepartureTimeInSeconds(departureTime);
 
@@ -36,23 +36,25 @@ module.exports = function (sequelize, DataTypes) {
             return routePatternIdCache[cacheKey];
         }
 
-        const { fuzzyTrip: trip } = await queryGraphql(`{
-            fuzzyTrip(route: "${routeGtfsId}", direction: ${directionId}, date: "${departureDate}", time: ${departureTimeSeconds}) {
-                pattern {
-                    code
+        routePatternIdCache[cacheKey] = new Promise(async resolve => {
+            const { fuzzyTrip: trip } = await queryGraphql(`{
+                fuzzyTrip(route: "${routeGtfsId}", direction: ${directionId}, date: "${departureDate}", time: ${departureTimeSeconds}) {
+                    pattern {
+                        code
+                    }
                 }
+            }`);
+
+            if (!trip) {
+                throw new Error(`Trip details not found for route ID ${routeGtfsId}, direction ${directionId}, departure date ${departureDate}, departure time ${departureTime}`);
             }
-        }`);
 
-        if (!trip) {
-            throw new Error(`Trip details not found for route ID ${routeGtfsId}, direction ${directionId}, departure date ${departureDate}, departure time ${departureTime}`);
-        }
+            const { code: routePatternId } = trip.pattern;
 
-        const { code: routePatternId } = trip.pattern;
+            return resolve(routePatternId);
+        });
 
-        routePatternIdCache[cacheKey] = routePatternId;
-
-        return routePatternId;
+        return routePatternIdCache[cacheKey];
     };
 
     Trip.findTripsFromLastDay = function (routePatternId) {

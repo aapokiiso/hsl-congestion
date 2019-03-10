@@ -17,9 +17,7 @@ const db = require('../db');
 
         try {
             const { VP: vehiclePosition } = JSON.parse(messageStr);
-            if (isVehicleAtStop(vehiclePosition)) {
-                await saveVehicleStopTime(routeId, vehiclePosition);
-            }
+            await logVehicleStopProximity(routeId, vehiclePosition);
         } catch (e) {
             console.error(e, messageStr);
         }
@@ -40,24 +38,30 @@ const db = require('../db');
         return routeId;
     }
 
-    function isVehicleAtStop({ drst: hasDoorsOpen }) {
-        return hasDoorsOpen;
-    }
-
-    async function saveVehicleStopTime(routeId, {
+    async function logVehicleStopProximity(routeId, {
         dir: realtimeApiDirectionId,
         lat: latitude,
         long: longitude,
         tsi: timestamp,
         oday: departureDate,
         start: departureTime,
+        drst: hasDoorsOpen,
     }) {
         const { RoutePattern, Trip, Stop, TripStop } = dbInstance.models;
 
         const directionId = RoutePattern.getRoutingApiDirectionId(realtimeApiDirectionId);
+
         const routePatternId = await Trip.searchRoutePatternIdFromApi(routeId, directionId, departureDate, departureTime);
+        if (!routePatternId) {
+            return;
+        }
 
         const routePattern = await RoutePattern.findOrCreateFromApi(routePatternId);
+
+        const stop = await Stop.findByPositionForRoutePattern(routePattern.get('id'), latitude, longitude);
+        if (!stop) {
+            return;
+        }
 
         const [trip] = await Trip.findOrCreate({
             where: {
@@ -67,14 +71,15 @@ const db = require('../db');
             },
         });
 
-        const stop = await Stop.findByPosition(routePattern.get('id'), latitude, longitude);
-
-        if (trip && stop) {
-            await TripStop.create({
-                tripId: trip.get('id'),
-                stopId: stop.get('id'),
-                seenAtStop: timestamp,
-            });
+        if (!trip) {
+            return;
         }
+
+        await TripStop.create({
+            tripId: trip.get('id'),
+            stopId: stop.get('id'),
+            seenAtStop: timestamp,
+            doorsOpen: hasDoorsOpen,
+        });
     }
 }());
