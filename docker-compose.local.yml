@@ -3,7 +3,7 @@ services:
     database:
         image: mariadb
         networks:
-            app:
+            default:
             phpmyadmin:
                 aliases:
                     - db
@@ -20,15 +20,16 @@ services:
             - 80
         depends_on:
             - database
-    app:
-        build:
-            context: ./app
-        volumes: &appvolumes
-            - ./app:/usr/app
+    track_stop_times:
+        image: node:10
+        command: bash -c "npm ci && npm run track-stop-times"
+        working_dir: /usr/app
+        volumes:
+            - .:/usr/app
         networks:
-            - app
+            - default
         depends_on:
             - database
 networks:
-    app:
+    default:
     phpmyadmin:
