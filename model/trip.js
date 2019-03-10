@@ -1,6 +1,7 @@
 'use strict';
 
 const queryGraphql = require('../includes/query-graphql');
+const moment = require('moment');
 
 module.exports = function (sequelize, DataTypes) {
     const Trip = sequelize.define('Trip', {
@@ -52,6 +53,23 @@ module.exports = function (sequelize, DataTypes) {
         routePatternIdCache[cacheKey] = routePatternId;
 
         return routePatternId;
+    };
+
+    Trip.findTripsFromLastDay = function (routePatternId) {
+        return Trip.findAll({
+            where: {
+                routePatternId,
+                [sequelize.Op.or]: [
+                    {
+                        departureDate: moment().subtract(1, 'days')
+                            .format('YYYY-MM-DD'),
+                    },
+                    {
+                        departureDate: moment().format('YYYY-MM-DD'),
+                    },
+                ],
+            },
+        });
     };
 
     Trip.getDepartureTimeInSeconds = function (departureTime) {
