@@ -8,7 +8,9 @@
         "lint:fix": "eslint . --fix"
     },
     "husky": {
-        "prepush": "npm run lint"
+        "hooks": {
+            "pre-push": "npm run lint"
+        }
     },
     "dependencies": {},
     "devDependencies": {
