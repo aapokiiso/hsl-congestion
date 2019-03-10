@@ -5,14 +5,22 @@
     "author": "Aapo Kiiso",
     "scripts": {
         "lint": "eslint .",
-        "lint:fix": "eslint . --fix"
+        "lint:fix": "eslint . --fix",
+        "track-stop-times": "node ./script/track-stop-times"
     },
     "husky": {
         "hooks": {
             "pre-push": "npm run lint"
         }
     },
-    "dependencies": {},
+    "dependencies": {
+        "geolib": "^2.0.24",
+        "mqtt": "^2.18.8",
+        "mysql2": "^1.6.5",
+        "request": "^2.88.0",
+        "request-promise-native": "^1.0.7",
+        "sequelize": "^4.43.0"
+    },
     "devDependencies": {
         "babel-eslint": "^10.0.1",
         "eslint": "^5.15.1",
