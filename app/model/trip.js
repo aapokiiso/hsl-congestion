@@ -4,12 +4,6 @@ const queryGraphql = require('../includes/query-graphql');
 
 module.exports = function (sequelize, DataTypes) {
     const Trip = sequelize.define('Trip', {
-        id: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            primaryKey: true,
-            comment: 'Internal Journey ID from HSL Realtime API',
-        },
         departureDate: {
             type: DataTypes.STRING,
             allowNull: false,
@@ -18,6 +12,13 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull: false,
         },
+    }, {
+        indexes: [
+            {
+                unique: true,
+                fields: ['routePatternId', 'departureDate', 'departureTime'],
+            },
+        ],
     });
 
     const RoutePattern = sequelize.models.RoutePattern || require('./route-pattern')(sequelize, DataTypes);

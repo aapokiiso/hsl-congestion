@@ -18,6 +18,7 @@ function initConnection() {
             host: appConfig.db.host,
             port: appConfig.db.port,
             dialect: appConfig.db.dialect,
+            operatorsAliases: Sequelize.Op,
         }
     );
 }
