@@ -7,6 +7,7 @@
         "start": "node ./service/track-sevens"
     },
     "dependencies": {
+        "geolib": "^2.0.24",
         "mqtt": "^2.18.8",
         "mysql2": "^1.6.5",
         "request": "^2.88.0",
