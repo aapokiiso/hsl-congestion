@@ -17,6 +17,7 @@
     "dependencies": {
         "express": "^4.16.4",
         "geolib": "^2.0.24",
+        "moment": "^2.24.0",
         "mqtt": "^2.18.8",
         "mysql2": "^1.6.5",
         "request": "^2.88.0",
