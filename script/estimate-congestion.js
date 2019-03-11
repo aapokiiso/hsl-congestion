@@ -16,7 +16,7 @@ const db = require('../db');
         console.log(`
 Congestion rate: ${Math.round(congestionRate * percentMultiplier)}%
 Stop times:
-${durations.map(([stop, duration]) => stop.get('name') + ' ' + duration + 's').join("\n")}`);
+${durations.map(([stop, duration]) => `${stop.get('name')} ${duration}s`).join('\n')}`);
     });
 
     async function getUpcomingTrips(stopId) {
