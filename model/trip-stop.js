@@ -28,7 +28,7 @@ module.exports = function (sequelize, DataTypes) {
      *
      * @type {number}
      */
-    TripStop.THEORETICAL_MAX_STOP_SECONDS = 30;
+    TripStop.MAX_SECONDS = 30;
 
     TripStop.hasTripPassedStop = async function (trip, stop) {
         const lastSeenAtStop = await TripStop.findOne({
@@ -72,13 +72,16 @@ module.exports = function (sequelize, DataTypes) {
         const tripStopsPassed = tripStopsBeenTo.slice(0, -1);
         const passedStopIds = tripStopsPassed.map(tripStop => tripStop.get('stopId'));
 
-        return Stop.findAll({
+        const stops = await Stop.findAll({
             where: {
                 id: {
                     [sequelize.Op.in]: passedStopIds,
                 },
             },
         });
+
+        return stops
+            .sort((a, b) => passedStopIds.indexOf(a.get('id')) - passedStopIds.indexOf(b.get('id')));
     };
 
     TripStop.getTripDurationAtStop = async function (trip, stop) {
@@ -104,15 +107,15 @@ module.exports = function (sequelize, DataTypes) {
         return lastSeen.get('seenAtStop') - firstSeen.get('seenAtStop');
     };
 
-    TripStop.getCongestionRate = function (stopDurations) {
-        const durationsWithWeights = stopDurations
+    TripStop.getCongestionRate = function (sortedStopDurations) {
+        const durationsWithWeights = sortedStopDurations
             .map((duration, idx, arr) => [duration, 1 / (arr.length - idx)]);
 
         const weightedMaxDuration = durationsWithWeights
             .reduce((acc, val) => {
                 const [, weight] = val;
 
-                return acc + TripStop.THEORETICAL_MAX_STOP_SECONDS * weight;
+                return acc + TripStop.MAX_SECONDS * weight;
             }, 0);
 
         const weightedDuration = durationsWithWeights
@@ -123,7 +126,7 @@ module.exports = function (sequelize, DataTypes) {
             }, 0);
 
         return weightedDuration && weightedMaxDuration
-            ? weightedDuration / weightedMaxDuration
+            ? Math.min(weightedDuration / weightedMaxDuration, 1)
             : 0;
     };
 

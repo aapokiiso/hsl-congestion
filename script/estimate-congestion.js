@@ -15,7 +15,8 @@ const db = require('../db');
         /* eslint-disable-next-line no-console */
         console.log(`
 Congestion rate: ${Math.round(congestionRate * percentMultiplier)}%
-Stop times: ${durations.join('s, ')}s`);
+Stop times:
+${durations.map(([stop, duration]) => `${stop.get('name')} ${duration}s`).join('\n')}`);
     });
 
     async function getUpcomingTrips(stopId) {
@@ -38,9 +39,12 @@ Stop times: ${durations.join('s, ')}s`);
         const passedStops = await TripStop.findTripPassedStops(trip);
 
         const stopDurations = await Promise.all(
-            passedStops.map(stop => TripStop.getTripDurationAtStop(trip, stop))
+            passedStops.map(async stop => [stop, await TripStop.getTripDurationAtStop(trip, stop)])
         );
 
-        return [stopDurations, TripStop.getCongestionRate(stopDurations)];
+        const sortedStopDurations = stopDurations
+            .sort((a, b) => passedStops.indexOf(a[0]) - passedStops.indexOf(b[0]));
+
+        return [sortedStopDurations, TripStop.getCongestionRate(sortedStopDurations.map(([, duration]) => duration))];
     }
 }());
