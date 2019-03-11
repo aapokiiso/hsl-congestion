@@ -22,7 +22,7 @@ services:
             - database
     track_stop_times:
         image: node:10
-        command: bash -c "npm ci && npm run track-stop-times"
+        command: npm run track-stop-times
         working_dir: /usr/app
         volumes:
             - .:/usr/app

@@ -28,7 +28,7 @@ module.exports = function (sequelize, DataTypes) {
     const RoutePattern = sequelize.models.RoutePattern || require('./route-pattern')(sequelize, DataTypes);
     Stop.belongsTo(RoutePattern, { as: 'routePattern' });
 
-    Stop.RADIUS_METERS = 50;
+    Stop.RADIUS_METERS = 30;
 
     Stop.createAllFromApi = async function (routePattern) {
         const { pattern } = await queryGraphql(`{
@@ -62,14 +62,14 @@ module.exports = function (sequelize, DataTypes) {
         );
     };
 
-    Stop.findByPosition = async function (routePatternId, vehicleLatitude, vehicleLongitude) {
+    Stop.findByPositionForRoutePattern = async function (routePatternId, vehicleLatitude, vehicleLongitude) {
         const stops = await Stop.findAll({
             where: {
                 routePatternId,
             },
         });
 
-        return stops.find(function isVehicleAtStop(stop) {
+        return stops.find(function isVehicleNearStop(stop) {
             return geolib.isPointInCircle(
                 { latitude: vehicleLatitude, longitude: vehicleLongitude },
                 { latitude: stop.get('latitude'), longitude: stop.get('longitude') },
