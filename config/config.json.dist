@@ -24,6 +24,7 @@
     },
     "hsl": {
         "stopRadiusMeters": 30,
-        "maxStopSeconds": 30
+        "minStopSeconds": 5,
+        "maxStopSeconds": 40
     }
 }
