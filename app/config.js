@@ -4,7 +4,7 @@ const ENV_DEFAULT = 'local';
 const ENV_PRODUCTION = 'production';
 
 const envName = process.env.NODE_ENV || ENV_DEFAULT;
-const envJson = require(`./config/${envName}.json`);
+const envJson = require(`../config/${envName}.json`);
 
 /**
  * @type {Object}
@@ -22,6 +22,10 @@ const envJson = require(`./config/${envName}.json`);
  * @property {String} mqtt.topic
  * @property {String} graphql.url
  * @property {String} env
+ * @property {Number} hsl.stopRadiusMeters - Radius for what is registered for a
+ *                                           trip (eg. vehicle) visiting a stop.
+ * @property {Number} hsl.maxStopSeconds - Upper ceiling for stop congestion.
+ *                                         Anything over this is classified as maximum congestion!
  * @property {Function} isProduction
  */
 module.exports = Object.assign({}, envJson, {

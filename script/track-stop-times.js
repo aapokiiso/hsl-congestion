@@ -1,11 +1,17 @@
 'use strict';
 
 const mqtt = require('mqtt');
-const appConfig = require('../config');
-const db = require('../db');
+const appConfig = require('../app/config');
+const orm = require('../app/orm')();
+const directionIdLib = require('../app/include/direction-id');
+const searchRoutePatternIdByTripDetails = require('../app/service/route-pattern/search-id-by-trip-details');
+const findRoutePatternById = require('../app/service/route-pattern/find-by-id');
+const findStopByPosition = require('../app/service/stop/find-by-position');
+const findTripByDeparture = require('../app/service/trip/find-by-departure');
+const createTrip = require('../app/service/trip/create');
+const addTripStop = require('../app/service/trip-stop/add');
 
-(async function IIFE() {
-    const dbInstance = await db.init();
+(function IIFE() {
     const mqttClient = initMqtt([
         '/hfp/v1/journey/ongoing/tram/+/+/1007/#',
         '/hfp/v1/journey/ongoing/tram/+/+/1007H/#',
@@ -42,44 +48,24 @@ const db = require('../db');
         dir: realtimeApiDirectionId,
         lat: latitude,
         long: longitude,
-        tsi: timestamp,
+        tsi: seenAtStop,
         oday: departureDate,
         start: departureTime,
         drst: hasDoorsOpen,
     }) {
-        const { RoutePattern, Trip, Stop, TripStop } = dbInstance.models;
+        const directionId = directionIdLib.convertRealtimeApiForRoutingApi(realtimeApiDirectionId);
+        const routePatternId = await searchRoutePatternIdByTripDetails(routeId, directionId, departureDate, departureTime);
+        const routePattern = routePatternId ? await findRoutePatternById(routePatternId) : null;
 
-        const directionId = RoutePattern.getRoutingApiDirectionId(realtimeApiDirectionId);
+        if (routePattern) {
+            const stop = await findStopByPosition(routePattern.id, latitude, longitude);
 
-        const routePatternId = await Trip.searchRoutePatternIdFromApi(routeId, directionId, departureDate, departureTime);
-        if (!routePatternId) {
-            return;
+            if (stop) {
+                const trip = await findTripByDeparture(routePattern.id, departureDate, departureTime)
+                    || await createTrip(routePattern.id, departureDate, departureTime);
+
+                await addTripStop(trip.id, stop.id, seenAtStop, hasDoorsOpen);
+            }
         }
-
-        const routePattern = await RoutePattern.findOrCreateFromApi(routePatternId);
-
-        const stop = await Stop.findByPositionForRoutePattern(routePattern.get('id'), latitude, longitude);
-        if (!stop) {
-            return;
-        }
-
-        const [trip] = await Trip.findOrCreate({
-            where: {
-                routePatternId: routePattern.get('id'),
-                departureDate,
-                departureTime,
-            },
-        });
-
-        if (!trip) {
-            return;
-        }
-
-        await TripStop.create({
-            tripId: trip.get('id'),
-            stopId: stop.get('id'),
-            seenAtStop: timestamp,
-            doorsOpen: hasDoorsOpen,
-        });
     }
 }());
