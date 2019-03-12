@@ -6,9 +6,6 @@ const Sequelize = require('sequelize');
 
 const appConfig = require('./config');
 
-// Instance cached here.
-let dbInstance;
-
 function initConnection() {
     return new Sequelize(
         appConfig.db.name,
@@ -25,13 +22,25 @@ function initConnection() {
 }
 
 async function importModels(sequelize) {
-    const modelsDir = path.resolve(__dirname, 'model');
+    const modelsDir = path.resolve(__dirname, 'orm');
 
     const fileNames = await getFileNames(modelsDir);
 
-    fileNames
+    const models = fileNames
         .filter(fileName => !isHiddenFile(fileName))
-        .forEach(importModel);
+        .map(importModel)
+        .reduce((models, model) => {
+            models[model.name] = model;
+
+            return models;
+        }, {});
+
+    Object.keys(models)
+        .forEach(modelName => {
+            if (typeof models[modelName].associate === 'function') {
+                models[modelName].associate(models);
+            }
+        });
 
     function getFileNames(dir) {
         return new Promise(function (resolve, reject) {
@@ -52,7 +61,7 @@ async function importModels(sequelize) {
     }
 
     function importModel(fileName) {
-        sequelize.import(path.join(modelsDir, fileName));
+        return sequelize.import(path.join(modelsDir, fileName));
     }
 }
 
@@ -70,16 +79,19 @@ async function syncDb(sequelize) {
     }
 }
 
-module.exports = {
-    async init() {
-        if (dbInstance) {
-            return dbInstance;
-        }
+let dbInstance;
 
-        dbInstance = await initConnection();
-        await importModels(dbInstance);
-        await syncDb(dbInstance);
+module.exports = function getDbInstance() {
+    if (!dbInstance) {
+        // Wrap it immediately in a Promise to prevent race conditions.
+        dbInstance = new Promise(async resolve => {
+            const instance = initConnection();
+            await importModels(instance);
+            await syncDb(instance);
 
-        return dbInstance;
-    },
+            return resolve(instance);
+        });
+    }
+
+    return dbInstance;
 };

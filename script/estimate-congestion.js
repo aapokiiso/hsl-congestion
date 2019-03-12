@@ -1,13 +1,13 @@
 'use strict';
 
-const db = require('../db');
+const findUpcomingTripsByStop = require('../app/service/trip/find-upcoming-by-stop');
+const findTripPassedStops = require('../app/service/trip/find-passed-stops');
+const calculateTripDurationAtStop = require('../app/service/trip/calc-duration-at-stop');
+const calculateCongestionRate = require('../app/service/trip/calc-congestion-rate');
+const sortByIndex = require('../app/include/sort-by-index');
 
 (async function IIFE() {
-    const dbInstance = await db.init();
-
-    const { Stop, Trip, TripStop } = dbInstance.models;
-
-    const upcomingTrips = await getUpcomingTrips('HSL:1220426');
+    const upcomingTrips = await findUpcomingTripsByStop('HSL:1220426');
     const tripCongestions = await Promise.all(upcomingTrips.map(getTripCongestionRate));
 
     tripCongestions.forEach(([durations, congestionRate]) => {
@@ -16,35 +16,22 @@ const db = require('../db');
         console.log(`
 Congestion rate: ${Math.round(congestionRate * percentMultiplier)}%
 Stop times:
-${durations.map(([stop, duration]) => `${stop.get('name')} ${duration}s`).join('\n')}`);
+${durations.map(([stop, duration]) => `${stop.name} ${duration}s`).join('\n')}`);
     });
 
-    async function getUpcomingTrips(stopId) {
-        const stop = await Stop.findByPk(stopId);
-        const recentTrips = await Trip.findTripsFromLastDay(stop.get('routePatternId'));
-
-        const recentTripsWithStopStatus = await Promise.all(
-            recentTrips.map(async trip => [
-                trip,
-                await TripStop.hasTripPassedStop(trip, stop),
-            ])
-        );
-
-        return recentTripsWithStopStatus
-            .filter(([trip, hasPassedStop]) => !hasPassedStop)
-            .map(([trip]) => trip);
-    }
-
     async function getTripCongestionRate(trip) {
-        const passedStops = await TripStop.findTripPassedStops(trip);
+        const passedStops = await findTripPassedStops(trip.id);
 
         const stopDurations = await Promise.all(
-            passedStops.map(async stop => [stop, await TripStop.getTripDurationAtStop(trip, stop)])
+            passedStops.map(async stop => [stop, await calculateTripDurationAtStop(trip.id, stop.id)])
         );
 
         const sortedStopDurations = stopDurations
-            .sort((a, b) => passedStops.indexOf(a[0]) - passedStops.indexOf(b[0]));
+            .sort(sortByIndex(passedStops));
 
-        return [sortedStopDurations, TripStop.getCongestionRate(sortedStopDurations.map(([, duration]) => duration))];
+        return [
+            sortedStopDurations,
+            calculateCongestionRate(sortedStopDurations.map(([, duration]) => duration)),
+        ];
     }
 }());
