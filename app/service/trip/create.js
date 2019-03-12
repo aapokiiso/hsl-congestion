@@ -6,11 +6,9 @@ module.exports = async function createTrip(routePatternId, departureDate, depart
     const orm = await initOrm();
 
     const trip = await orm.models.Trip.create({
-        where: {
-            routePatternId,
-            departureDate,
-            departureTime,
-        },
+        routePatternId,
+        departureDate,
+        departureTime,
     });
 
     return trip.get({ plain: true });
