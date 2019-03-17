@@ -32,7 +32,7 @@ if (appConfig.ssl.enabled) {
     api.use(enforceSSL());
 }
 
-api.use('/api', require('./endpoint/departures'));
-api.use('/api', require('./endpoint/stops'));
+api.use('/', require('./endpoint/departures'));
+api.use('/', require('./endpoint/stops'));
 
 server.listen(process.env.PORT);

@@ -17,6 +17,7 @@ const envJson = require(`./config/${envName}.json`);
  * @property {String} db.password
  * @property {boolean} db.forceSync
  * @property {boolean} db.logging
+ * @property {String} db.socketPath
  * @property {boolean} ssl.enabled
  * @property {String} ssl.key - SSL private key
  * @property {String} ssl.cert - SSL certificate

@@ -1,0 +1,12 @@
+service: api
+
+runtime: nodejs10
+
+env_variables:
+  SQL_USER: root
+  SQL_PASSWORD: J8sbOyItppdfBr1b
+  SQL_DATABASE: hslcongestion
+  INSTANCE_CONNECTION_NAME: hsl-tram-7-congestion-tracking:europe-west1:hsl-tram-7-congestion-tracking
+
+beta_settings:
+  cloud_sql_instances: hsl-tram-7-congestion-tracking:europe-west1:hsl-tram-7-congestion-tracking
