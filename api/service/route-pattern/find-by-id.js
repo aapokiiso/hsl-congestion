@@ -3,8 +3,10 @@
 const initOrm = require('../../orm');
 const importRoutePattern = require('./import-by-id');
 
-module.exports = function findRoutePattern(routePatternId) {
-    return findFromDb(routePatternId) || importRoutePattern(routePatternId);
+module.exports = async function findRoutePattern(routePatternId) {
+    const existingPattern = await findFromDb(routePatternId);
+
+    return existingPattern || importRoutePattern(routePatternId);
 };
 
 async function findFromDb(routePatternId) {

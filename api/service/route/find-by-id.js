@@ -3,11 +3,15 @@
 const initOrm = require('../../orm');
 const importRoute = require('./import-by-id');
 
-module.exports = function findRoute(routeId) {
-    return findFromDb(routeId) || importRoute(routeId);
+module.exports = async function findRoute(routeId) {
+    const existingRoute = await findFromDb(routeId);
+
+    return existingRoute || importRoute(routeId);
 };
 
-function findFromDb(routeId) {
+async function findFromDb(routeId) {
+    const orm = await initOrm();
+
     return orm.models.Route.findByPk(
         routeId,
         {
