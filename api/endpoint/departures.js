@@ -6,11 +6,11 @@ const sortByIndex = require('../include/sort-by-index');
 const findUpcomingTripsByStop = require('../service/trip/find-upcoming-by-stop');
 const calcTripCongestionRate = require('../service/trip/calc-congestion-rate');
 
-const departuresCache = new NodeCache({stdTTL: 5, checkperiod: 0});
-const router = require('express').Router();
+const departuresCache = new NodeCache({ stdTTL: 5, checkperiod: 0 });
+const router = require('express').Router(); // eslint-disable-line new-cap
 
 router.get('/departures/:stopId', async function (req, res) {
-    const {stopId} = req.params;
+    const { stopId } = req.params;
 
     try {
         const congestionRates = departuresCache.get(stopId)

@@ -58,7 +58,7 @@ const addTripStop = require('../app/service/trip-stop/add');
         const routePattern = routePatternId ? await findRoutePatternById(routePatternId) : null;
 
         if (routePattern) {
-            const stop = await findStopByPositionForRoutePattern(latitude, longitude, {routePatternId: routePattern.id});
+            const stop = await findStopByPositionForRoutePattern(latitude, longitude, { routePatternId: routePattern.id });
 
             if (stop) {
                 const trip = await findTripByDeparture(routePattern.id, departureDate, departureTime)

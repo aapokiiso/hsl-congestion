@@ -4,11 +4,11 @@ const NodeCache = require('node-cache');
 const statusCodes = require('http-status-codes');
 const findClosestStopsByPosition = require('../service/stop/find-closest-by-position');
 
-const stopsCache = new NodeCache({stdTTL: 3600, checkperiod: 0});
-const router = require('express').Router();
+const stopsCache = new NodeCache({ stdTTL: 3600, checkperiod: 0 });
+const router = require('express').Router(); // eslint-disable-line new-cap
 
 router.get('/stops/:lat/:lon', async function(req, res) {
-    const {lat, lon} = req.params;
+    const { lat, lon } = req.params;
 
     try {
         const stops = stopsCache.get(getCacheKey(lat, lon))
