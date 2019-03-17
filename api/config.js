@@ -4,7 +4,7 @@ const ENV_DEFAULT = 'local';
 const ENV_PRODUCTION = 'production';
 
 const envName = process.env.NODE_ENV || ENV_DEFAULT;
-const envJson = require(`../config/${envName}.json`);
+const envJson = require(`./config/${envName}.json`);
 
 /**
  * @type {Object}
@@ -17,6 +17,10 @@ const envJson = require(`../config/${envName}.json`);
  * @property {String} db.password
  * @property {boolean} db.forceSync
  * @property {boolean} db.logging
+ * @property {boolean} ssl.enabled
+ * @property {String} ssl.key - SSL private key
+ * @property {String} ssl.cert - SSL certificate
+ * @property {String} ssl.ca - SSL certificate authority
  * @property {String} mqtt.host
  * @property {number} mqtt.port
  * @property {String} mqtt.topic

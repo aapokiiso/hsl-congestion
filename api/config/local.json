@@ -1,0 +1,30 @@
+{
+    "db": {
+        "dialect": "mysql",
+        "host": "35.195.141.95",
+        "port": 3306,
+        "name": "hslcongestion",
+        "username": "root",
+        "password": "J8sbOyItppdfBr1b",
+        "forceSync": false,
+        "logging": false
+    },
+    "ssl": {
+        "enabled": false,
+        "key": "",
+        "cert": "",
+        "ca": ""
+    },
+    "mqtt": {
+        "host": "mqtt.hsl.fi",
+        "port": 1883
+    },
+    "graphql": {
+        "url": "https://api.digitransit.fi/routing/v1/routers/hsl/index/graphql"
+    },
+    "hsl": {
+        "stopRadiusMeters": 30,
+        "minStopSeconds": 5,
+        "maxStopSeconds": 40
+    }
+}

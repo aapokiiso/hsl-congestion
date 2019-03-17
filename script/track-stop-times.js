@@ -6,7 +6,7 @@ const orm = require('../app/orm')();
 const directionIdLib = require('../app/include/direction-id');
 const searchRoutePatternIdByTripDetails = require('../app/service/route-pattern/search-id-by-trip-details');
 const findRoutePatternById = require('../app/service/route-pattern/find-by-id');
-const findStopByPosition = require('../app/service/stop/find-by-position');
+const findStopByPositionForRoutePattern = require('../app/service/route-pattern/find-stop-by-position');
 const findTripByDeparture = require('../app/service/trip/find-by-departure');
 const createTrip = require('../app/service/trip/create');
 const addTripStop = require('../app/service/trip-stop/add');
@@ -58,7 +58,7 @@ const addTripStop = require('../app/service/trip-stop/add');
         const routePattern = routePatternId ? await findRoutePatternById(routePatternId) : null;
 
         if (routePattern) {
-            const stop = await findStopByPosition(routePattern.id, latitude, longitude);
+            const stop = await findStopByPositionForRoutePattern(latitude, longitude, {routePatternId: routePattern.id});
 
             if (stop) {
                 const trip = await findTripByDeparture(routePattern.id, departureDate, departureTime)

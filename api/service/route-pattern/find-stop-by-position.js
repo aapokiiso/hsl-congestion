@@ -4,7 +4,7 @@ const geolib = require('geolib');
 const initOrm = require('../../orm');
 const appConfig = require('../../config');
 
-module.exports = async function findStopByPosition(routePatternId, vehicleLatitude, vehicleLongitude) {
+module.exports = async function findStopByPositionForRoutePattern(routePatternId, vehicleLatitude, vehicleLongitude) {
     const orm = await initOrm();
 
     const stops = await orm.models.Stop
