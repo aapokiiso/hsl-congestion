@@ -13,5 +13,5 @@ module.exports = async function findTripByDeparture(routePatternId, departureDat
         },
     });
 
-    return trip.get({ plain: true });
+    return trip ? trip.get({ plain: true }) : null;
 };
