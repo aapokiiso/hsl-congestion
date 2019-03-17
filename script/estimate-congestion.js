@@ -1,10 +1,10 @@
 'use strict';
 
-const findUpcomingTripsByStop = require('../app/service/trip/find-upcoming-by-stop');
-const findTripPassedStops = require('../app/service/trip/find-passed-stops');
-const calculateTripDurationAtStop = require('../app/service/trip/calc-duration-at-stop');
-const calculateCongestionRate = require('../app/service/trip/calc-congestion-rate');
-const sortByIndex = require('../app/include/sort-by-index');
+const findUpcomingTripsByStop = require('../api/service/trip/find-upcoming-by-stop');
+const findTripPassedStops = require('../api/service/trip/find-passed-stops');
+const calculateTripDurationAtStop = require('../api/service/trip/calc-duration-at-stop');
+const calculateCongestionRate = require('../api/service/trip/calc-congestion-rate');
+const sortByIndex = require('../api/include/sort-by-index');
 
 (async function IIFE() {
     const upcomingTrips = await findUpcomingTripsByStop('HSL:1220426');

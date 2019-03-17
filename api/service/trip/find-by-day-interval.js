@@ -23,6 +23,9 @@ module.exports = async function findTripsByDayInterval(routePatternId, daysInPas
                     },
                 ],
             },
+            order: [
+                ['createdAt', 'DESC'],
+            ],
         });
 
     return trips.map(trip => trip.get({ plain: true }));

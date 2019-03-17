@@ -1,8 +1,13 @@
 'use strict';
 
 const appConfig = require('../../config');
+const sortByIndex = require('../../include/sort-by-index');
+const findTripPassedStops = require('./find-passed-stops');
+const calculateTripDurationAtStop = require('./calc-duration-at-stop');
 
-module.exports = function calculateTripCongestionRate(sortedStopDurations) {
+module.exports = async function calculateTripCongestionRate(tripId) {
+    const sortedStopDurations = await getSortedStopDurations(tripId);
+
     const durationsWithWeights = sortedStopDurations
         .map((duration, idx, arr) => [
             getSignificantDuration(duration),
@@ -27,6 +32,30 @@ module.exports = function calculateTripCongestionRate(sortedStopDurations) {
         ? Math.min(weightedDuration / weightedMaxDuration, 1)
         : 0;
 };
+
+/**
+ * Get stop durations in seconds for trip,
+ * sorted by chronological order (eg. 1st stop on route is 1st in array)
+ *
+ * @param {Number} tripId
+ * @returns {Array<Number>}
+ */
+async function getSortedStopDurations(tripId) {
+    const passedStops = await findTripPassedStops(tripId);
+
+    const stopDurations = await Promise.all(
+        passedStops.map(async stop => [stop, await calculateTripDurationAtStop(tripId, stop.id)])
+    );
+
+    return stopDurations
+        .sort((a, b) => {
+            const [stopA] = a;
+            const [stopB] = b;
+
+            return sortByIndex(passedStops)(stopA, stopB);
+        })
+        .map(([stop, stopDuration]) => stopDuration);
+}
 
 /**
  * If a tram stops, the doors will be open at least a set
