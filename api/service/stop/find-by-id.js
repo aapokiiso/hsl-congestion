@@ -7,5 +7,5 @@ module.exports = async function findById(stopId) {
 
     const stop = await orm.models.Stop.findByPk(stopId);
 
-    return stop ? stop.get({plain: true}) : null;
+    return stop ? stop.get({ plain: true }) : null;
 };

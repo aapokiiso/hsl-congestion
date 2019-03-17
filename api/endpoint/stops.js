@@ -31,7 +31,7 @@ router.get('/stops', async function (req, res) {
 });
 
 router.get('/stops/:stopId', async function (req, res) {
-    const {stopId} = req.params;
+    const { stopId } = req.params;
 
     const cacheKey = stopId;
 
@@ -46,7 +46,6 @@ router.get('/stops/:stopId', async function (req, res) {
 
     async function cacheStop() {
         const stop = await findStopById(stopId);
-        console.log(stop, stopId)
 
         stopsCache.set(cacheKey, stop);
 

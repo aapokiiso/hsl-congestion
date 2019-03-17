@@ -14,5 +14,5 @@ async function findFromDb(routePatternId) {
 
     const pattern = orm.models.RoutePattern.findByPk(routePatternId);
 
-    return pattern ? pattern.get({plain: true}) : null;
+    return pattern ? pattern.get({ plain: true }) : null;
 }
