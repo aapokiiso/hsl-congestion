@@ -12,7 +12,7 @@ module.exports = async function findRoutePattern(routePatternId) {
 async function findFromDb(routePatternId) {
     const orm = await initOrm();
 
-    const pattern = orm.models.RoutePattern.findByPk(routePatternId);
+    const pattern = await orm.models.RoutePattern.findByPk(routePatternId);
 
     return pattern ? pattern.get({ plain: true }) : null;
 }
