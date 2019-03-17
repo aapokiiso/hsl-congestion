@@ -2,7 +2,7 @@
     "name": "hsl-congestion-tram-7",
     "version": "1.0.0",
     "description": "Congestion tracking for Helsinki tram number 7",
-    "author": "Aapo Kiiso",
+    "license": "UNLICENSED",
     "scripts": {
         "lint": "eslint .",
         "lint:fix": "eslint . --fix",

@@ -18,7 +18,7 @@ node_modules
 # App
 /api/config/*.json
 /.nuxt
-/app.yaml
+app.yaml
 
 # Let's Encrypt
 /.well-known
