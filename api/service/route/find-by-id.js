@@ -12,10 +12,7 @@ module.exports = async function findRoute(routeId) {
 async function findFromDb(routeId) {
     const orm = await initOrm();
 
-    return orm.models.Route.findByPk(
-        routeId,
-        {
-            plain: true,
-        }
-    );
+    const route = await orm.models.Route.findByPk(routeId);
+
+    return route ? route.get({ plain: true }) : null;
 }

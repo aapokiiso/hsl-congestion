@@ -34,7 +34,7 @@ services:
         image: node:10
         command: npm run api
         working_dir: /usr/app
-        volumes: appvolumes
+        volumes: *appvolumes
         networks:
             - default
         depends_on:

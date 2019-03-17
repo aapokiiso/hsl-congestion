@@ -1,15 +1,15 @@
 'use strict';
 
 const mqtt = require('mqtt');
-const appConfig = require('../api/config');
-const orm = require('../api/orm')();
-const directionIdLib = require('../api/include/direction-id');
-const searchRoutePatternIdByTripDetails = require('../api/service/route-pattern/search-id-by-trip-details');
-const findRoutePatternById = require('../api/service/route-pattern/find-by-id');
-const findStopByPositionForRoutePattern = require('../api/service/route-pattern/find-stop-by-position');
-const findTripByDeparture = require('../api/service/trip/find-by-departure');
-const createTrip = require('../api/service/trip/create');
-const addTripStop = require('../api/service/trip-stop/add');
+const appConfig = require('../config');
+const orm = require('../orm')();
+const directionIdLib = require('../include/direction-id');
+const searchRoutePatternIdByTripDetails = require('../service/route-pattern/search-id-by-trip-details');
+const findRoutePatternById = require('../service/route-pattern/find-by-id');
+const findStopByPositionForRoutePattern = require('../service/route-pattern/find-stop-by-position');
+const findTripByDeparture = require('../service/trip/find-by-departure');
+const createTrip = require('../service/trip/create');
+const addTripStop = require('../service/trip-stop/add');
 
 (function IIFE() {
     const mqttClient = initMqtt([
@@ -58,7 +58,7 @@ const addTripStop = require('../api/service/trip-stop/add');
         const routePattern = routePatternId ? await findRoutePatternById(routePatternId) : null;
 
         if (routePattern) {
-            const stop = await findStopByPositionForRoutePattern(latitude, longitude, { routePatternId: routePattern.id });
+            const stop = await findStopByPositionForRoutePattern(routePattern.id, latitude, longitude);
 
             if (stop) {
                 const trip = await findTripByDeparture(routePattern.id, departureDate, departureTime)

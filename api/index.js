@@ -6,6 +6,8 @@ const enforceSSL = require('express-enforces-ssl');
 const helmet = {
     hsts: require('hsts'),
 };
+const cors = require('cors');
+
 const appConfig = require('./config');
 
 const api = express();
@@ -22,6 +24,8 @@ if (appConfig.ssl.enabled) {
 } else {
     server = require('http').createServer(api);
 }
+
+api.use(cors());
 
 if (appConfig.ssl.enabled) {
     api.use(helmet.hsts());
