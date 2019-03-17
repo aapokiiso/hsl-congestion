@@ -17,6 +17,9 @@ function initConnection() {
             dialect: appConfig.db.dialect,
             operatorsAliases: Sequelize.Op,
             logging: appConfig.db.logging,
+            dialectOptions: {
+                socketPath: appConfig.db.socketPath,
+            },
         }
     );
 }
