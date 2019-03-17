@@ -1,4 +1,4 @@
-'use strict';
+
 
 export function stripLeadingSlash(path) {
     return path.replace(/^\/+/, '');
