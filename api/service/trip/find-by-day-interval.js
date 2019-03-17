@@ -24,7 +24,7 @@ module.exports = async function findTripsByDayInterval(routePatternId, daysInPas
                 ],
             },
             order: [
-                ['createdAt', 'DESC'],
+                ['createdAt', 'DESC'], // @todo convert departure date/time into DATETIME & use here
             ],
         });
 

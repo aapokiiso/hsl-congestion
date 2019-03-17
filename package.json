@@ -7,7 +7,8 @@
         "lint": "eslint .",
         "lint:fix": "eslint . --fix",
         "track-stop-times": "node ./script/track-stop-times",
-        "start": "node ./server"
+        "api": "node ./api",
+        "dev": "nuxt"
     },
     "husky": {
         "hooks": {
@@ -24,6 +25,7 @@
         "mqtt": "^2.18.8",
         "mysql2": "^1.6.5",
         "node-cache": "^4.2.0",
+        "nuxt": "^2.4.5",
         "request": "^2.88.0",
         "request-promise-native": "^1.0.7",
         "sequelize": "^4.43.0"
