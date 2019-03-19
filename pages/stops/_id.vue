@@ -1,10 +1,18 @@
 <template>
     <div class="page">
-        <page-header :title="stop.name" backAction="/" />
+        <page-header
+            :title="stop.name"
+            back-action="/"
+        />
         <main>
-            <p v-if="!hasDepartures">No departures found.</p>
+            <p v-if="!hasDepartures">
+                No departures found.
+            </p>
             <ol v-if="hasDepartures">
-                <li v-for="[trip, congestionRate] in departures">
+                <li
+                    v-for="[trip, congestionRate] in departures"
+                    :key="trip.id"
+                >
                     Departed at: {{ trip.departureTime }} -
                     {{ formatCongestionRate(congestionRate) }}
                 </li>
@@ -14,35 +22,37 @@
 </template>
 
 <script type="text/javascript">
-    import axios from '~/plugins/axios';
-    import PageHeader from '~/components/page-header';
+import axios from '~/plugins/axios';
+import PageHeader from '~/components/page-header';
 
-    export default {
-        components: {
-            PageHeader,
+export default {
+    components: {
+        PageHeader,
+    },
+    computed: {
+        hasDepartures() {
+            return this.departures.length > 0;
         },
-        computed: {
-            hasDepartures() {
-                return this.departures.length > 0;
-            }
-        },
-        methods: {
-            formatCongestionRate(rawValue) {
-                return `${Math.round(rawValue * 100)}%`;
-            }
-        },
-        async asyncData(context) {
-            const {id: stopId} = context.params;
+    },
+    async asyncData(context) {
+        const { id: stopId } = context.params;
 
-            const [{data: stop}, {data: departures}] = await Promise.all([
-                axios.get(`/stops/${stopId}`),
-                axios.get(`/departures/${stopId}`)
-            ]);
+        const [{ data: stop }, { data: departures }] = await Promise.all([
+            axios.get(`/stops/${stopId}`),
+            axios.get(`/departures/${stopId}`),
+        ]);
 
-            return {
-                stop,
-                departures,
-            };
-        }
-    };
+        return {
+            stop,
+            departures,
+        };
+    },
+    methods: {
+        formatCongestionRate(rawValue) {
+            const percentMultiplier = 100;
+
+            return `${Math.round(rawValue * percentMultiplier)}%`;
+        },
+    },
+};
 </script>

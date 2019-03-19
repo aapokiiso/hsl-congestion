@@ -1,28 +1,43 @@
 <template>
     <header class="app-header">
-        <nuxt-link :to="backAction" v-if="hasBackAction" class="back-action">
+        <nuxt-link
+            v-if="hasBackAction"
+            :to="backAction"
+            class="back-action"
+        >
             <icon-chevron-left class="back-action__icon" />
             <span>Back</span>
         </nuxt-link>
-        <h1 class="title">{{ title }}</h1>
+        <h1 class="title">
+            {{ title }}
+        </h1>
     </header>
 </template>
 
 <script>
-    import IconChevronLeft from '~/assets/svg/chevron-left.svg';
+import IconChevronLeft from '~/assets/svg/chevron-left.svg';
 
-    export default {
-        name: 'app-header',
-        components: {
-            IconChevronLeft,
+export default {
+    name: 'AppHeader',
+    components: {
+        IconChevronLeft,
+    },
+    props: {
+        title: {
+            type: String,
+            required: true,
         },
-        props: ['title', 'backAction'],
-        computed: {
-            hasBackAction() {
-                return this.backAction;
-            }
-        }
-    }
+        backAction: {
+            type: String,
+            default: '/',
+        },
+    },
+    computed: {
+        hasBackAction() {
+            return this.backAction;
+        },
+    },
+};
 </script>
 
 <style lang="scss" scoped>

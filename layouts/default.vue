@@ -7,7 +7,7 @@
 </template>
 
 <style lang="scss" scoped>
-    @import "../assets/scss/includes/env";
+    @import '../assets/scss/includes/env';
 
     .backdrop {
         background-color: $color-background;

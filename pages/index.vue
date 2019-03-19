@@ -2,8 +2,13 @@
     <div>
         <p>Select a stop...</p>
         <ul>
-            <li v-for="stop in stops">
-                <nuxt-link :to="{name: 'stops-id', params: {id: stop.id}}">
+            <li
+                v-for="stop in stops"
+                :key="stop.id"
+            >
+                <nuxt-link
+                    :to="{name: 'stops-id', params: {id: stop.id}}"
+                >
                     {{ stop.name }} - {{ stop.routePatternId }}
                 </nuxt-link>
             </li>
@@ -12,15 +17,15 @@
 </template>
 
 <script type="text/javascript">
-    import axios from '~/plugins/axios';
+import axios from '~/plugins/axios';
 
-    export default {
-        async asyncData() {
-            const {data: stops} = await axios.get('/stops');
+export default {
+    async asyncData() {
+        const { data: stops } = await axios.get('/stops');
 
-            return {
-                stops
-            };
-        }
-    };
+        return {
+            stops,
+        };
+    },
+};
 </script>

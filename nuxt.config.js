@@ -7,8 +7,8 @@ export default {
     },
     head: {
         link: [
-            { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Roboto' }
-        ]
+            { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Roboto' },
+        ],
     },
     css: [
         '~/assets/scss/defaults.scss',
