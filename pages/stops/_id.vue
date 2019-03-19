@@ -1,20 +1,26 @@
 <template>
-    <div>
-        <h1>{{ stop.name }} - {{ stop.routePatternId }}</h1>
-        <p v-if="!hasDepartures">No departures found.</p>
-        <ol v-if="hasDepartures">
-            <li v-for="[trip, congestionRate] in departures">
-                Departed at: {{ trip.departureTime }} -
-                {{ formatCongestionRate(congestionRate) }}
-            </li>
-        </ol>
+    <div class="page">
+        <page-header :title="stop.name" backAction="/" />
+        <main>
+            <p v-if="!hasDepartures">No departures found.</p>
+            <ol v-if="hasDepartures">
+                <li v-for="[trip, congestionRate] in departures">
+                    Departed at: {{ trip.departureTime }} -
+                    {{ formatCongestionRate(congestionRate) }}
+                </li>
+            </ol>
+        </main>
     </div>
 </template>
 
 <script type="text/javascript">
     import axios from '~/plugins/axios';
+    import PageHeader from '~/components/page-header';
 
     export default {
+        components: {
+            PageHeader,
+        },
         computed: {
             hasDepartures() {
                 return this.departures.length > 0;
@@ -32,7 +38,7 @@
                 axios.get(`/stops/${stopId}`),
                 axios.get(`/departures/${stopId}`)
             ]);
-console.log(stop)
+
             return {
                 stop,
                 departures,
