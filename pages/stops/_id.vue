@@ -1,22 +1,20 @@
 <template>
-    <div class="page">
+    <div>
         <page-header
             :title="stop.name"
             back-action="/"
         />
         <main>
-            <p v-if="!hasDepartures">
+            <p
+                v-if="!hasDepartures"
+                class="no-content-message"
+            >
                 No departures found.
             </p>
-            <ol v-if="hasDepartures">
-                <li
-                    v-for="[trip, congestionRate] in departures"
-                    :key="trip.id"
-                >
-                    Departed at: {{ trip.departureTime }} -
-                    {{ formatCongestionRate(congestionRate) }}
-                </li>
-            </ol>
+            <departure-table
+                v-if="hasDepartures"
+                :departures="departures"
+            />
         </main>
     </div>
 </template>
@@ -24,10 +22,12 @@
 <script type="text/javascript">
     import axios from '~/plugins/axios';
     import PageHeader from '~/components/page-header';
+    import DepartureTable from '~/components/departure-table';
 
     export default {
         components: {
             PageHeader,
+            DepartureTable,
         },
         computed: {
             hasDepartures() {
@@ -46,13 +46,6 @@
                 stop,
                 departures,
             };
-        },
-        methods: {
-            formatCongestionRate(rawValue) {
-                const percentMultiplier = 100;
-
-                return `${Math.round(rawValue * percentMultiplier)}%`;
-            },
         },
     };
 </script>

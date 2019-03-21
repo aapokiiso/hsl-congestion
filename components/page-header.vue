@@ -51,8 +51,8 @@
         display: flex;
         align-items: center;
         flex-wrap: wrap;
-        background-color: $color-primary;
-        color: $color-contrast;
+        background-color: map-get($color-palette, 'theme');
+        color: map-get($color-palette, 'theme-contrast');
         position: relative;
         padding: map-get($spacing-unit, 'base');
     }
@@ -65,12 +65,12 @@
         display: inline-flex;
         line-height: map-get($spacing-unit, 'base');
         padding: map-get($spacing-unit, 'crack');
-        background-color: $color-primary-dark;
+        background-color: map-get($color-palette, 'theme-dark');
         border-radius: map-get($border-radius, 'button');
 
         &:hover,
         &:focus {
-            background-color: darken($color-primary-dark, $phi * 10);
+            background-color: darken(map-get($color-palette, 'theme-dark'), $phi * 10);
         }
     }
 
@@ -78,7 +78,7 @@
         float: left;
         width: map-get($spacing-unit, 'base');
         height: map-get($spacing-unit, 'base');
-        fill: $color-contrast;
+        fill: map-get($color-palette, 'theme-contrast');
         margin-right: map-get($spacing-unit, 'crack');
     }
 

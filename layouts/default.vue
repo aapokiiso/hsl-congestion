@@ -10,18 +10,21 @@
     @import '../assets/scss/includes/env';
 
     .backdrop {
-        background-color: $color-background;
         overflow: hidden;
         min-height: 100vh;
     }
 
     .app {
-        background-color: $color-contrast;
+        background-color: map-get($color-palette, 'theme-contrast');
         max-width: map-get($spacing-unit, 'max');
         overflow: hidden;
     }
 
     @media (min-width: map-get($spacing-unit, 'max')) {
+        .backdrop {
+            background-color: map-get($color-palette, 'background');
+        }
+
         .app {
             margin: percentage(.1 / $phi) auto;
             border-radius: map-get($border-radius, 'app');

@@ -1,6 +1,10 @@
-$color-primary: #f092cd;
-$color-primary-dark: #bc629c;
-$color-primary-light: #ffc4ff;
-$color-shadow: #000;
-$color-background: #e1e2e1;
-$color-contrast: #fff;
+$color-palette: (
+    'theme': #f092cd,
+    'theme-dark': #bc629c,
+    'theme-light': #ffc4ff,
+    'theme-contrast': #fff,
+    'shadow': #000,
+    'background': #e1e2e1,
+    'text': #000,
+    'text-secondary': #afb0af,
+);
