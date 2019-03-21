@@ -11,11 +11,14 @@
 // @lamiaoy/eslint-config
 
 module.exports = {
-    parser: 'babel-eslint',
+    extends: [
+        'plugin:vue/recommended'
+    ],
     env: {
         browser: true,
     },
     parserOptions: {
+        parser: 'babel-eslint',
         sourceType: 'module',
     },
     rules: {
@@ -147,6 +150,25 @@ module.exports = {
                 'requireParamDescription': false,
                 'requireReturnDescription': false,
             }
-        ]
-    }
+        ],
+        'vue/html-indent': [
+            'error',
+            4
+        ],
+        'vue/script-indent': [
+            'error',
+            4,
+            {
+                'baseIndent': 1,
+            }
+        ],
+    },
+    "overrides": [
+        {
+            "files": ["*.vue"],
+            "rules": {
+                "indent": "off"
+            }
+        }
+    ]
 };
