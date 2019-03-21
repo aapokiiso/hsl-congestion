@@ -12,6 +12,7 @@
     .backdrop {
         background-color: $color-background;
         overflow: hidden;
+        min-height: 100vh;
     }
 
     .app {

@@ -66,13 +66,6 @@ module.exports = {
                 'SwitchCase': 1,
             }
         ],
-        'vue/html-indent': [
-            'error',
-            4,
-            {
-                'SwitchCase': 1,
-            }
-        ],
         'key-spacing': 'error',
         'keyword-spacing': 'error',
         'max-statements-per-line': 'error', // Defaults to max 2
@@ -157,6 +150,25 @@ module.exports = {
                 'requireParamDescription': false,
                 'requireReturnDescription': false,
             }
-        ]
-    }
+        ],
+        'vue/html-indent': [
+            'error',
+            4
+        ],
+        'vue/script-indent': [
+            'error',
+            4,
+            {
+                'baseIndent': 1,
+            }
+        ],
+    },
+    "overrides": [
+        {
+            "files": ["*.vue"],
+            "rules": {
+                "indent": "off"
+            }
+        }
+    ]
 };

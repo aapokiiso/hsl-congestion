@@ -6,7 +6,7 @@
     "scripts": {
         "lint": "npm run lint:css && npm run lint:js",
         "lint:js": "eslint --ext .js,.vue .",
-        "lint:js:fix": "eslint --ext .js,.vue . --fix",
+        "lint:js:fix": "eslint --fix --ext .js,.vue .",
         "lint:css": "stylelint './**/*.scss' './**/*.vue'",
         "lint:css:fix": "stylelint './**/*.scss' './**/*.vue' --fix",
         "track-stop-times": "node ./api/script/track-stop-times",

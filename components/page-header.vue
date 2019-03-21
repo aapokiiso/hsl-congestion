@@ -1,13 +1,17 @@
 <template>
     <header class="app-header">
-        <nuxt-link
-            v-if="hasBackAction"
-            :to="backAction"
-            class="back-action"
+        <div
+            v-if="hasActions"
+            class="actions"
         >
-            <icon-chevron-left class="back-action__icon" />
-            <span>Back</span>
-        </nuxt-link>
+            <nuxt-link
+                :to="backAction"
+                class="action action--back"
+            >
+                <icon-chevron-left class="action__icon" />
+                <span>Back</span>
+            </nuxt-link>
+        </div>
         <h1 class="title">
             {{ title }}
         </h1>
@@ -15,53 +19,63 @@
 </template>
 
 <script>
-import IconChevronLeft from '~/assets/svg/chevron-left.svg';
+    import IconChevronLeft from '~/assets/svg/chevron-left.svg';
 
-export default {
-    name: 'AppHeader',
-    components: {
-        IconChevronLeft,
-    },
-    props: {
-        title: {
-            type: String,
-            required: true,
+    export default {
+        components: {
+            IconChevronLeft,
         },
-        backAction: {
-            type: String,
-            default: '/',
+        props: {
+            title: {
+                type: String,
+                required: true,
+            },
+            backAction: {
+                type: String,
+                required: false,
+                default: null,
+            },
         },
-    },
-    computed: {
-        hasBackAction() {
-            return this.backAction;
+        computed: {
+            hasActions() {
+                return this.backAction;
+            },
         },
-    },
-};
+    };
 </script>
 
 <style lang="scss" scoped>
     @import '../assets/scss/includes/env';
 
     .app-header {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
         background-color: $color-primary;
         color: $color-contrast;
         position: relative;
         padding: map-get($spacing-unit, 'base');
     }
 
-    .back-action {
-        display: flex;
-        align-items: center;
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 100%;
-        line-height: map-get($spacing-unit, 'base');
-        padding: map-get($spacing-unit, 'base');
+    .actions {
+        margin-right: map-get($spacing-unit, 'base');
     }
 
-    .back-action__icon {
+    .action {
+        display: inline-flex;
+        line-height: map-get($spacing-unit, 'base');
+        padding: map-get($spacing-unit, 'crack');
+        background-color: $color-primary-dark;
+        border-radius: map-get($border-radius, 'button');
+
+        &:hover,
+        &:focus {
+            background-color: darken($color-primary-dark, $phi * 10);
+        }
+    }
+
+    .action__icon {
+        float: left;
         width: map-get($spacing-unit, 'base');
         height: map-get($spacing-unit, 'base');
         fill: $color-contrast;
@@ -70,7 +84,7 @@ export default {
 
     .title {
         margin: 0;
-        text-align: center;
-        font-size: map-get($font-size, 'large');
+        padding: map-get($spacing-unit, 'crack');
+        font-size: map-get($font-size, 'base');
     }
 </style>

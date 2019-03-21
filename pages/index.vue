@@ -17,15 +17,15 @@
 </template>
 
 <script type="text/javascript">
-import axios from '~/plugins/axios';
+    import axios from '~/plugins/axios';
 
-export default {
-    async asyncData() {
-        const { data: stops } = await axios.get('/stops');
+    export default {
+        async asyncData() {
+            const { data: stops } = await axios.get('/stops');
 
-        return {
-            stops,
-        };
-    },
-};
+            return {
+                stops,
+            };
+        },
+    };
 </script>
