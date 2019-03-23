@@ -9,13 +9,18 @@
                 :to="{name: 'stops-id', params: {id: stop.id}}"
             >
                 {{ stop.name }}
-                <span class="direction">{{ directionDescription(stop) }}</span>
+                <span
+                    v-if="directionDescription(stop)"
+                    class="direction"
+                >{{ directionDescription(stop) }}</span>
             </nuxt-link>
         </li>
     </ul>
 </template>
 
 <script>
+    import { mapGetters } from 'vuex';
+
     export default {
         props: {
             stops: {
@@ -28,14 +33,18 @@
                 return this.stops.slice()
                     .sort(this.sortStopsAlphabetically);
             },
+            ...mapGetters([
+                'getRoutePatternForStop',
+            ]),
         },
         methods: {
             directionDescription(stop) {
-                if (stop.routePattern) {
-                    return `towards ${stop.routePattern.headsign}`;
+                const routePattern = this.getRoutePatternForStop(stop.id);
+                if (routePattern) {
+                    return `towards ${routePattern.headsign}`;
                 }
 
-                return 'unknown route';
+                return null;
             },
             sortStopsAlphabetically(stop1, stop2) {
                 const nameComparison = stop1.name.localeCompare(stop2.name);

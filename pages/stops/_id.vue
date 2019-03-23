@@ -1,7 +1,7 @@
 <template>
     <div>
         <page-header
-            :title="stop.name"
+            :title="pageTitle"
             back-action="/"
         />
         <main>
@@ -11,9 +11,10 @@
             >
                 No departures found.
             </p>
-            <departure-table
+            <departure-list
                 v-if="hasDepartures"
                 :departures="departures"
+                :show-percentages="isInDebugMode"
             />
         </main>
     </div>
@@ -22,28 +23,45 @@
 <script type="text/javascript">
     import axios from '~/plugins/axios';
     import PageHeader from '~/components/page-header';
-    import DepartureTable from '~/components/departure-table';
+    import DepartureList from '~/components/departure-list';
+    import { mapState, mapGetters } from 'vuex';
 
     export default {
         components: {
             PageHeader,
-            DepartureTable,
+            DepartureList,
         },
         computed: {
+            ...mapState([
+                'isInDebugMode',
+            ]),
+            ...mapGetters([
+                'getStopById',
+                'getRoutePatternForStop',
+            ]),
             hasDepartures() {
                 return this.departures.length > 0;
+            },
+            pageTitle() {
+                const { name } = this.stop;
+                const { headsign } = this.routePattern;
+
+                return `${name} (towards ${headsign})`;
+            },
+            stop() {
+                return this.getStopById(this.stopId);
+            },
+            routePattern() {
+                return this.getRoutePatternForStop(this.stop.id);
             },
         },
         async asyncData(context) {
             const { id: stopId } = context.params;
 
-            const [{ data: stop }, { data: departures }] = await Promise.all([
-                axios.get(`/stops/${stopId}`),
-                axios.get(`/departures/${stopId}`),
-            ]);
+            const { data: departures } = await axios.get(`/departures/${stopId}`);
 
             return {
-                stop,
+                stopId,
                 departures,
             };
         },

@@ -1,30 +1,21 @@
 <template>
-    <table class="departures">
-        <tbody>
-            <tr
-                v-for="[trip, congestionRate] in sortedDepartures"
-                :key="trip.id"
-                class="departure"
-                :class="{'departure--congested': isCongested(congestionRate)}"
+    <ol class="departures">
+        <li
+            v-for="[trip, congestionRate] in sortedDepartures"
+            :key="trip.id"
+            class="departure"
+            :class="{'departure--congested': isCongested(congestionRate)}"
+        >
+            <span class="departure__time">
+                {{ formatDepartureTime(trip.stopDepartureTime) }}
+            </span>
+            <span
+                class="departure__status"
             >
-                <td class="departure__time">
-                    {{ formatDepartureTime(trip.departureTime) }}
-                </td>
-                <td
-                    v-if="isCongested(congestionRate)"
-                    class="departure__status"
-                >
-                    Full
-                </td>
-                <td
-                    v-if="!isCongested(congestionRate)"
-                    class="departure__status"
-                >
-                    OK
-                </td>
-            </tr>
-        </tbody>
-    </table>
+                {{ getCongestionText(congestionRate) }}
+            </span>
+        </li>
+    </ol>
 </template>
 
 <script>
@@ -36,6 +27,11 @@
                 type: Array,
                 required: true,
             },
+            showPercentages: {
+                type: Boolean,
+                required: false,
+                default: false,
+            },
         },
         computed: {
             sortedDepartures() {
@@ -45,7 +41,19 @@
         },
         methods: {
             formatDepartureTime(departureTime) {
-                return moment(departureTime).format('hh:mm');
+                return moment(departureTime).format('LT');
+            },
+            getCongestionText(congestionRate) {
+                if (this.showPercentages) {
+                    const percentMultiplier = 100;
+                    const congestionPercent = Math.round(congestionRate * percentMultiplier);
+
+                    return `${congestionPercent}%`;
+                }
+
+                return this.isCongested(congestionRate)
+                    ? 'FULL'
+                    : 'OK';
             },
             isCongested(congestionRate) {
                 const congestionThreshold = 0.8;
@@ -66,11 +74,14 @@
     @import '../assets/scss/includes/env';
 
     .departures {
-        width: 100%;
+        list-style: none;
+        padding-left: 0;
     }
 
     .departure {
-        padding: map-get($spacing-unit, 'crack');
+        display: flex;
+        justify-content: space-between;
+        margin: map-get($spacing-unit, 'base');
     }
 
     .departure__status {

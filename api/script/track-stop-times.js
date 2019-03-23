@@ -56,7 +56,7 @@ const addTripStopSighting = require('../service/trip/add-stop-sighting');
         const directionId = directionIdLib.convertRealtimeApiForRoutingApi(realtimeApiDirectionId);
         const departureTimeSeconds = departureTimeLib.convertToSeconds(
             departureTime,
-            departureTimeLib.hasRolledOverToNextDay(departureDate, seenAtStop)
+            departureTimeLib.shouldRollOverToNextDay(departureDate, seenAtStop)
         );
 
         const routePatternId = await searchRoutePatternIdByTripDetails(routeId, directionId, departureDate, departureTimeSeconds);
