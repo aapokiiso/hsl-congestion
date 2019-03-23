@@ -6,9 +6,12 @@ const ENV_PRODUCTION = 'production';
 const envName = process.env.NODE_ENV || ENV_DEFAULT;
 const envJson = require(`./config/${envName}.json`);
 
+const moment = require('moment-timezone');
+moment.tz.setDefault(envJson.timezone);
+
 /**
  * @type {Object}
- * @property {number} httpPort
+ * @property {number} timezone
  * @property {String} db.dialect
  * @property {String} db.host
  * @property {number} db.port

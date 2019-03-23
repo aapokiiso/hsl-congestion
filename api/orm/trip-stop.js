@@ -3,9 +3,8 @@
 module.exports = function (sequelize, DataTypes) {
     const TripStop = sequelize.define('TripStop', {
         seenAtStop: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DATE,
             allowNull: false,
-            comment: 'UNIX timestamp',
         },
         doorsOpen: {
             type: DataTypes.BOOLEAN,

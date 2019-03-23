@@ -1,6 +1,7 @@
 'use strict';
 
 const initOrm = require('../../orm');
+const moment = require('moment-timezone');
 
 module.exports = async function calculateTripDurationAtStop(tripId, stopId) {
     const timestampsLog = await getTimestampsLog(tripId, stopId);
@@ -9,7 +10,8 @@ module.exports = async function calculateTripDurationAtStop(tripId, stopId) {
         const [firstSeen] = timestampsLog;
         const [lastSeen] = timestampsLog.reverse();
 
-        return lastSeen.seenAtStop - firstSeen.seenAtStop;
+        return moment(lastSeen.seenAtStop)
+            .diff(moment(firstSeen.seenAtStop), 'seconds');
     }
 
     // Trip has not been on stop yet,

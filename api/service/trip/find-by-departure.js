@@ -1,15 +1,15 @@
 'use strict';
 
 const initOrm = require('../../orm');
+const departureTimeLib = require('../../include/departure-time');
 
-module.exports = async function findTripByDeparture(routePatternId, departureDate, departureTime) {
+module.exports = async function findTripByDeparture(routePatternId, departureDate, departureTimeSeconds) {
     const orm = await initOrm();
 
     const trip = await orm.models.Trip.findOne({
         where: {
             routePatternId,
-            departureDate,
-            departureTime,
+            departureTime: departureTimeLib.convertToDate(departureDate, departureTimeSeconds),
         },
     });
 

@@ -11,9 +11,9 @@ module.exports = async function importRoutePattern(routePatternId) {
     const { route: routeData } = patternData;
     const { id: routeId } = await findRoute(routeData.gtfsId);
 
-    const { directionId } = patternData;
+    const { directionId, headsign } = patternData;
 
-    const pattern = await createRoutePatternToDb(routePatternId, routeId, directionId);
+    const pattern = await createRoutePatternToDb(routePatternId, routeId, directionId, headsign);
 
     await importStops(routePatternId);
 
@@ -24,6 +24,7 @@ async function findDataFromApi(routePatternId) {
     const { pattern } = await queryGraphQL(`{
             pattern(id: "${routePatternId}") {
                 directionId
+                headsign
                 route {
                     gtfsId
                 }
@@ -33,13 +34,14 @@ async function findDataFromApi(routePatternId) {
     return pattern;
 }
 
-async function createRoutePatternToDb(routePatternId, routeId, directionId) {
+async function createRoutePatternToDb(routePatternId, routeId, directionId, headsign) {
     const orm = await initOrm();
 
     const pattern = await orm.models.RoutePattern.create({
         id: routePatternId,
         routeId,
         direction: directionId,
+        headsign,
     });
 
     return pattern.get({ plain: true });

@@ -33,6 +33,7 @@ if (appConfig.ssl.enabled) {
 }
 
 api.use('/', require('./endpoint/departures'));
+api.use('/', require('./endpoint/route-patterns'));
 api.use('/', require('./endpoint/stops'));
 
 server.listen(process.env.PORT);

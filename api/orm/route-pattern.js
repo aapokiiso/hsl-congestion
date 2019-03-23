@@ -12,6 +12,10 @@ module.exports = function importRoutePatternModel(sequelize, DataTypes) {
             type: DataTypes.INTEGER,
             allowNull: false,
         },
+        headsign: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
     });
 
     RoutePattern.associate = function (models) {

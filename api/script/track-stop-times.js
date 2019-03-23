@@ -2,14 +2,14 @@
 
 const mqtt = require('mqtt');
 const appConfig = require('../config');
-const orm = require('../orm')();
 const directionIdLib = require('../include/direction-id');
+const departureTimeLib = require('../include/departure-time');
 const searchRoutePatternIdByTripDetails = require('../service/route-pattern/search-id-by-trip-details');
 const findRoutePatternById = require('../service/route-pattern/find-by-id');
 const findStopByPositionForRoutePattern = require('../service/route-pattern/find-stop-by-position');
 const findTripByDeparture = require('../service/trip/find-by-departure');
-const createTrip = require('../service/trip/create');
-const addTripStop = require('../service/trip-stop/add');
+const createTripForDeparture = require('../service/trip/create-for-departure');
+const addTripStopSighting = require('../service/trip/add-stop-sighting');
 
 (function IIFE() {
     const mqttClient = initMqtt([
@@ -48,23 +48,28 @@ const addTripStop = require('../service/trip-stop/add');
         dir: realtimeApiDirectionId,
         lat: latitude,
         long: longitude,
-        tsi: seenAtStop,
+        tst: seenAtStop,
         oday: departureDate,
         start: departureTime,
         drst: hasDoorsOpen,
     }) {
         const directionId = directionIdLib.convertRealtimeApiForRoutingApi(realtimeApiDirectionId);
-        const routePatternId = await searchRoutePatternIdByTripDetails(routeId, directionId, departureDate, departureTime);
+        const departureTimeSeconds = departureTimeLib.convertToSeconds(
+            departureTime,
+            departureTimeLib.hasRolledOverToNextDay(departureDate, seenAtStop)
+        );
+
+        const routePatternId = await searchRoutePatternIdByTripDetails(routeId, directionId, departureDate, departureTimeSeconds);
         const routePattern = routePatternId ? await findRoutePatternById(routePatternId) : null;
 
         if (routePattern) {
             const stop = await findStopByPositionForRoutePattern(routePattern.id, latitude, longitude);
 
             if (stop) {
-                const trip = await findTripByDeparture(routePattern.id, departureDate, departureTime)
-                    || await createTrip(routePattern.id, departureDate, departureTime);
+                const trip = await findTripByDeparture(routePattern.id, departureDate, departureTimeSeconds)
+                    || await createTripForDeparture(routePattern.id, departureDate, departureTimeSeconds);
 
-                await addTripStop(trip.id, stop.id, seenAtStop, hasDoorsOpen);
+                await addTripStopSighting(trip.id, stop.id, seenAtStop, hasDoorsOpen);
             }
         }
     }

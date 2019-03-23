@@ -1,32 +1,46 @@
 'use strict';
 
 const Sequelize = require('sequelize');
-const moment = require('moment');
+const moment = require('moment-timezone');
 const initOrm = require('../../orm');
 
-module.exports = async function findTripsByDayInterval(routePatternId, daysInPast = 1) {
+module.exports = async function findTripsByDayInterval(routePatternId, referenceDay = 0, daysInPast = 0) {
     const orm = await initOrm();
 
     const trips = await orm.models.Trip
         .findAll({
             where: {
                 routePatternId,
-                [Sequelize.Op.or]: [
-                    {
-                        departureDate: moment()
-                            .subtract(daysInPast, 'days')
-                            .format('YYYY-MM-DD'),
-                    },
-                    {
-                        departureDate: moment()
-                            .format('YYYY-MM-DD'),
-                    },
-                ],
+                departureTime: getSearchInterval(referenceDay, daysInPast),
             },
             order: [
-                ['createdAt', 'DESC'], // @todo convert departure date/time into DATETIME & use here
+                ['departureTime', 'DESC'],
             ],
         });
 
     return trips.map(trip => trip.get({ plain: true }));
 };
+
+function getSearchInterval(referenceDay, daysInPast) {
+    const hasLimit = daysInPast > 0;
+
+    return hasLimit
+        ? {
+            [Sequelize.Op.between]: [
+                moment()
+                    .subtract(daysInPast, 'days')
+                    .startOf('day')
+                    .toDate(),
+                moment()
+                    .subtract(referenceDay, 'days')
+                    .endOf('day')
+                    .toDate(),
+            ],
+        }
+        : {
+            [Sequelize.Op.lte]: moment()
+                .subtract(referenceDay, 'days')
+                .endOf('day')
+                .toDate(),
+        };
+}
