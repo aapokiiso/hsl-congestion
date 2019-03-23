@@ -8,3 +8,7 @@ MVP (onkoseiskatäynnä.fi):
 - As a Backend, I want to store tram doors-open stop times into a Database.
 - As a Backend, I want to get all doors-open stop times for an ongoing tram journey from a Database.
 - As a Database, I want to model stop times in relation to trams and stops.
+
+Code quality:
+- don't create in find services
+- throw error instead of returning null

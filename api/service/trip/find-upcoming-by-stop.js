@@ -1,21 +1,53 @@
 'use strict';
 
+const moment = require('moment-timezone');
 const findStopById = require('../stop/find-by-id');
-const findTripsByDayInterval = require('./find-by-day-interval');
-const hasTripPassedStop = require('./has-passed-stop');
+const findTripById = require('./find-by-id');
+const queryGraphQL = require('../../include/query-graphql');
+const departureTimeLib = require('../../include/departure-time');
 
 module.exports = async function findUpcomingTripsByStop(stopId) {
-    const stop = await findStopById(stopId);
-    const recentTrips = await findTripsByDayInterval(stop.routePatternId, 0, 1);
+    const { routePatternId } = await findStopById(stopId);
+    const departures = await findStopDeparturesFromApi(stopId, routePatternId);
 
-    const recentTripsWithStopStatus = await Promise.all(
-        recentTrips.map(async trip => [
-            trip,
-            await hasTripPassedStop(trip.id, stop.id),
-        ])
+    const tripsForStop = await Promise.all(
+        departures.map(async function (departure) {
+            const { gtfsId: tripId } = departure.trip;
+            const trip = await findTripById(tripId);
+            if (trip) {
+                const { realtimeDeparture } = departure;
+                trip.stopDepartureTime = convertSecondsToDepartureDate(realtimeDeparture);
+            }
+
+            return trip;
+        })
     );
 
-    return recentTripsWithStopStatus
-        .filter(([trip, hasPassedStop]) => !hasPassedStop)
-        .map(([trip]) => trip);
+    return tripsForStop
+        .filter(trip => trip);
 };
+
+async function findStopDeparturesFromApi(stopId, routePatternId) {
+    const { stop } = await queryGraphQL(`{
+            stop(id: "${stopId}") {
+                stopTimesForPattern(id: "${routePatternId}") {
+                    trip {
+                        gtfsId
+                    }
+                    realtimeDeparture
+                }
+            }
+        }`);
+
+    const { stopTimesForPattern: departures } = stop;
+
+    return departures;
+}
+
+function convertSecondsToDepartureDate(departureTimeSeconds) {
+    const departureDate = departureTimeLib.hasRolledOverToNextDay(departureTimeSeconds)
+        ? moment().subtract(1, 'days')
+        : moment();
+
+    return departureTimeLib.convertToDate(departureDate, departureTimeSeconds);
+}

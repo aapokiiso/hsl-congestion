@@ -2,17 +2,16 @@
 
 module.exports = function (sequelize, DataTypes) {
     const Trip = sequelize.define('Trip', {
+        id: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            primaryKey: true,
+            comment: 'GTFS ID in HSL Routing API',
+        },
         departureTime: {
             type: DataTypes.DATE,
             allowNull: false,
         },
-    }, {
-        indexes: [
-            {
-                unique: true,
-                fields: ['routePatternId', 'departureTime'],
-            },
-        ],
     });
 
     Trip.associate = function (models) {

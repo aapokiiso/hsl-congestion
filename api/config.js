@@ -32,8 +32,11 @@ moment.tz.setDefault(envJson.timezone);
  * @property {String} env
  * @property {Number} hsl.stopRadiusMeters - Radius for what is registered for a
  *                                           trip (eg. vehicle) visiting a stop.
+ * @property {Number} hsl.minStopSeconds - Minimum time that doors are open,
+ *                                         subtracted from all stops times.
  * @property {Number} hsl.maxStopSeconds - Upper ceiling for stop congestion.
  *                                         Anything over this is classified as maximum congestion!
+ * @property {Number} hsl.maxTripAgeDays - How long to persist trips in db
  * @property {Function} isProduction
  */
 module.exports = Object.assign({}, envJson, {

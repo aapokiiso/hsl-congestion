@@ -2,26 +2,26 @@
 
 const moment = require('moment-timezone');
 
+const secondsInDay = 86400;
+const minutesInHour = 60;
+const secondsInMinute = 60;
+
 module.exports = {
     /**
      * HSL Realtime API uses HH:MM format to store departure times.
      *
      * @param {String} departureTime - eg. "20:15"
-     * @param {boolean} hasRolledOver - if yes, append one full day to seconds
+     * @param {boolean} shouldRollOver - if yes, append one full day to seconds
      * @returns {number} - eg. 72900
      */
-    convertToSeconds(departureTime, hasRolledOver = false) {
+    convertToSeconds(departureTime, shouldRollOver = false) {
         const [hours, minutes] = departureTime.split(':');
 
-        const secondsInDay = 86400;
-        const minutesInHour = 60;
-        const secondsInMinute = 60;
-
-        return (hasRolledOver ? secondsInDay : 0)
+        return (shouldRollOver ? secondsInDay : 0)
             + hours * minutesInHour * secondsInMinute + minutes * secondsInMinute;
     },
     /**
-     * @param {String} departureDate - eg. "2019-03-23"
+     * @param {Date|Number|String} departureDate - eg. "2019-03-23"
      * @param {Number} departureTimeSeconds - eg. 30, 86400, 87000 etc
      * @returns {Date}
      */
@@ -38,10 +38,13 @@ module.exports = {
      * the vehicle timestamp is already in 4th of May (eg. past midnight)
      *
      * @param {String} departureDate - eg. "2019-03-23"
-     * @param {String} vehicleTimestamp - eg. "2018-07-03T06:36:32Z"
+     * @param {String} vehicleTimestamp - eg. "2019-03-24T01:36:32Z"
      * @returns {boolean}
      */
-    hasRolledOverToNextDay(departureDate, vehicleTimestamp) {
+    shouldRollOverToNextDay(departureDate, vehicleTimestamp) {
         return moment(vehicleTimestamp).isAfter(departureDate, 'days');
+    },
+    hasRolledOverToNextDay(departureTimeSeconds) {
+        return departureTimeSeconds > secondsInDay;
     },
 };

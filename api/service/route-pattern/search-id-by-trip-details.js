@@ -1,7 +1,6 @@
 'use strict';
 
 const gtfsIdLib = require('../../include/gtfs-id');
-const departureTimeLib = require('../../include/departure-time');
 const queryGraphQL = require('../../include/query-graphql');
 
 const routePatternIdCache = {};
@@ -34,7 +33,7 @@ async function searchFromApi(routeGtfsId, directionId, departureDate, departureT
             }`);
 
     if (!trip) {
-        throw new Error(`Trip details not found for route ID ${routeGtfsId}, direction ${directionId}, departure date ${departureDate}, departure time ${departureTime}`);
+        throw new Error(`Trip details not found for route ID ${routeGtfsId}, direction ${directionId}, departure date ${departureDate}, departure time ${departureTimeSeconds}`);
     }
 
     const { code: routePatternId } = trip.pattern;
