@@ -15,4 +15,6 @@ const appConfig = require('../config');
             routePattern => purgeTripsByDate(routePattern.id, oldTripThreshold)
         )
     );
+
+    process.exit();
 }());
