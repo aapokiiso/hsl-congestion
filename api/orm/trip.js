@@ -2,19 +2,15 @@
 
 module.exports = function (sequelize, DataTypes) {
     const Trip = sequelize.define('Trip', {
-        departureDate: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
         departureTime: {
-            type: DataTypes.STRING,
+            type: DataTypes.DATE,
             allowNull: false,
         },
     }, {
         indexes: [
             {
                 unique: true,
-                fields: ['routePatternId', 'departureDate', 'departureTime'],
+                fields: ['routePatternId', 'departureTime'],
             },
         ],
     });

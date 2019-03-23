@@ -6,9 +6,8 @@ const queryGraphQL = require('../../include/query-graphql');
 
 const routePatternIdCache = {};
 
-module.exports = async function searchRoutePatternIdByTripDetails(routeId, directionId, departureDate, departureTime) {
+module.exports = async function searchRoutePatternIdByTripDetails(routeId, directionId, departureDate, departureTimeSeconds) {
     const routeGtfsId = gtfsIdLib.convertRealtimeApiForRoutingApi(routeId);
-    const departureTimeSeconds = departureTimeLib.convertToSeconds(departureTime);
 
     const cacheKey = [routeGtfsId, directionId, departureDate, departureTimeSeconds].join('-');
     if (routePatternIdCache[cacheKey]) {

@@ -1,7 +1,7 @@
 <template>
     <ul class="stops">
         <li
-            v-for="stop in stops"
+            v-for="stop in sortedStops"
             :key="stop.id"
             class="stop"
         >
@@ -9,7 +9,7 @@
                 :to="{name: 'stops-id', params: {id: stop.id}}"
             >
                 {{ stop.name }}
-                <span class="direction">{{ directionDescription(stop.routePatternId) }}</span>
+                <span class="direction">{{ directionDescription(stop) }}</span>
             </nuxt-link>
         </li>
     </ul>
@@ -23,16 +23,28 @@
                 required: true,
             },
         },
+        computed: {
+            sortedStops() {
+                return this.stops.slice()
+                    .sort(this.sortStopsAlphabetically);
+            },
+        },
         methods: {
-            directionDescription(routePatternId) {
-                // @todo make dynamic
-                if (routePatternId === 'HSL:1007:1:04') {
-                    return 'towards Länsiterminaali';
-                } else if (routePatternId === 'HSL:1007:0:02') {
-                    return 'towards Länsi-Pasila';
+            directionDescription(stop) {
+                if (stop.routePattern) {
+                    return `towards ${stop.routePattern.headsign}`;
                 }
 
                 return 'unknown route';
+            },
+            sortStopsAlphabetically(stop1, stop2) {
+                const nameComparison = stop1.name.localeCompare(stop2.name);
+
+                if (nameComparison === 0) {
+                    return stop1.routePatternId.localeCompare(stop2.routePatternId);
+                }
+
+                return nameComparison;
             },
         },
     };

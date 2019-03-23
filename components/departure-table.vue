@@ -1,24 +1,35 @@
 <template>
     <table class="departures">
-        <thead>
-            <tr>
-                <th>Arrives at</th>
-                <th>Congestion rate</th>
-            </tr>
-        </thead>
         <tbody>
             <tr
-                v-for="[trip, congestionRate] in departures"
+                v-for="[trip, congestionRate] in sortedDepartures"
                 :key="trip.id"
+                class="departure"
+                :class="{'departure--congested': isCongested(congestionRate)}"
             >
-                <td>{{ trip.departureTime }}</td>
-                <td>{{ formatCongestionRate(congestionRate) }}</td>
+                <td class="departure__time">
+                    {{ formatDepartureTime(trip.departureTime) }}
+                </td>
+                <td
+                    v-if="isCongested(congestionRate)"
+                    class="departure__status"
+                >
+                    Full
+                </td>
+                <td
+                    v-if="!isCongested(congestionRate)"
+                    class="departure__status"
+                >
+                    OK
+                </td>
             </tr>
         </tbody>
     </table>
 </template>
 
 <script>
+    import moment from 'moment';
+
     export default {
         props: {
             departures: {
@@ -26,11 +37,26 @@
                 required: true,
             },
         },
+        computed: {
+            sortedDepartures() {
+                return this.departures.slice()
+                    .sort(this.sortDeparturesAscending);
+            },
+        },
         methods: {
-            formatCongestionRate(rawValue) {
-                const percentMultiplier = 100;
+            formatDepartureTime(departureTime) {
+                return moment(departureTime).format('hh:mm');
+            },
+            isCongested(congestionRate) {
+                const congestionThreshold = 0.8;
 
-                return `${Math.round(rawValue * percentMultiplier)}%`;
+                return congestionRate > congestionThreshold;
+            },
+            sortDeparturesAscending(departure1, departure2) {
+                const [trip1] = departure1;
+                const [trip2] = departure2;
+
+                return moment(trip1.departureTime).toDate() - moment(trip2.departureTime).toDate();
             },
         },
     };
@@ -41,14 +67,20 @@
 
     .departures {
         width: 100%;
+    }
 
-        th {
-            text-align: left;
-        }
+    .departure {
+        padding: map-get($spacing-unit, 'crack');
+    }
 
-        th,
-        td {
-            padding: map-get($spacing-unit, 'crack');
-        }
+    .departure__status {
+        text-transform: uppercase;
+        color: map-get($color-palette, 'text-secondary');
+        text-align: right;
+        font-weight: bold;
+    }
+
+    .departure--congested .departure__status {
+        color: map-get($color-palette, 'bad');
     }
 </style>

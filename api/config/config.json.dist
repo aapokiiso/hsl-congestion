@@ -1,4 +1,5 @@
 {
+    "timezone": "Europe/Helsinki",
     "db": {
         "dialect": "mysql",
         "host": "localhost",

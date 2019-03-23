@@ -6,7 +6,7 @@ const hasTripPassedStop = require('./has-passed-stop');
 
 module.exports = async function findUpcomingTripsByStop(stopId) {
     const stop = await findStopById(stopId);
-    const recentTrips = await findTripsByDayInterval(stop.routePatternId, 1);
+    const recentTrips = await findTripsByDayInterval(stop.routePatternId, 0, 1);
 
     const recentTripsWithStopStatus = await Promise.all(
         recentTrips.map(async trip => [
