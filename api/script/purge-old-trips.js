@@ -2,7 +2,7 @@
 
 const moment = require('moment-timezone');
 const findAllRoutePatterns = require('../service/route-pattern/find-all');
-const purgeTripsByDayInterval = require('../service/trip/purge-by-day-interval');
+const purgeTripsByDate = require('../service/trip/purge-by-date');
 const appConfig = require('../config');
 
 (async function IIFE(){
@@ -12,7 +12,7 @@ const appConfig = require('../config');
 
     await Promise.all(
         routePatterns.map(
-            routePattern => purgeTripsByDayInterval(routePattern.id, oldTripThreshold)
+            routePattern => purgeTripsByDate(routePattern.id, oldTripThreshold)
         )
     );
 }());
