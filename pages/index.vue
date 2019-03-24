@@ -1,13 +1,13 @@
 <template>
     <div>
-        <page-header title="HSL Tram 7 Congestion" />
+        <page-header :title="$t('appName')" />
         <main>
             <section
                 v-if="hasStops"
-                class="stops stops--nearest"
+                class="stops-list stops-list--nearest"
             >
-                <h2 class="stops__title">
-                    Nearest stops
+                <h2 class="stops-list__title">
+                    {{ $t('stopList.nearestStopsTitle') }}
                 </h2>
                 <stop-list
                     v-if="isLocationAvailable"
@@ -18,23 +18,31 @@
                     class="button"
                     @click="refreshLocation"
                 >
-                    <span>Find nearest stops</span>
+                    <span>{{ $t('stopList.nearestStopsFindAction') }}</span>
                 </button>
                 <button
-                    v-if="isLocationAvailable"
+                    v-if="isLocationAvailable && !hasRefreshedLocations"
                     class="button"
                     @click="refreshLocation"
                 >
                     <icon-refresh class="button__icon" />
-                    <span>Refresh nearest stops</span>
+                    <span>{{ $t('stopList.nearestStopsRefreshAction') }}</span>
+                </button>
+                <button
+                    v-if="hasRefreshedLocations"
+                    class="button button--flush"
+                    disabled
+                >
+                    <icon-check class="button__icon" />
+                    <span>{{ $t('stopList.nearestStopsRefreshSuccess') }}</span>
                 </button>
             </section>
             <section
                 v-if="hasStops"
-                class="stops stops--all"
+                class="stops-list stops-list--all"
             >
-                <h2 class="stops__title">
-                    All stops
+                <h2 class="stops-list__title">
+                    {{ $t('stopList.allStopsTitle') }}
                 </h2>
                 <stop-list :stops="stops" />
             </section>
@@ -42,23 +50,40 @@
                 v-if="!hasStops"
                 class="no-content-message"
             >
-                No stops found.
+                {{ $t('stopList.noStopsFound') }}
             </p>
         </main>
+        <page-footer />
     </div>
 </template>
 
 <script type="text/javascript">
     import { mapState, mapGetters, mapMutations } from 'vuex';
     import PageHeader from '~/components/page-header';
+    import PageFooter from '~/components/page-footer';
     import StopList from '~/components/stop-list';
     import IconRefresh from '~/assets/svg/refresh.svg';
+    import IconCheck from '~/assets/svg/check.svg';
 
     export default {
         components: {
             PageHeader,
+            PageFooter,
             StopList,
             IconRefresh,
+            IconCheck,
+        },
+        data() {
+            return {
+                hasRefreshedLocations: false,
+            };
+        },
+        head() {
+            return {
+                meta: [
+                    { hid: 'description', name: 'description', content: this.$t('appDescription.short') },
+                ],
+            };
         },
         computed: {
             hasStops() {
@@ -92,6 +117,7 @@
             refreshLocation() {
                 window.navigator.geolocation.getCurrentPosition(position => {
                     this.setLocation(position.coords);
+                    this.hasRefreshedLocations = true;
                 });
             },
             getDistanceFromStop(stop) {
@@ -104,7 +130,11 @@
 <style lang="scss" scoped>
     @import '../assets/scss/includes/env';
 
-    .stops__title {
+    .stops-list {
+        margin: map-get($spacing-unit, 'double') 0;
+    }
+
+    .stops-list__title {
         font-size: map-get($font-size, 'base');
     }
 </style>

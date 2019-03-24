@@ -1,10 +1,12 @@
 import axios from '~/plugins/axios';
+import i18n from '~/locale/i18n';
 
 export const state = () => ({
     stops: [],
     routePatterns: [],
     location: {},
     showCongestionPercentages: false,
+    locale: i18n.locale,
 });
 
 export const mutations = {
@@ -22,6 +24,10 @@ export const mutations = {
     },
     toggleCongestionPercentages(state) {
         state.showCongestionPercentages = !state.showCongestionPercentages;
+    },
+    setLocale(state, localeCode) {
+        state.locale = localeCode;
+        i18n.locale = localeCode;
     },
 };
 

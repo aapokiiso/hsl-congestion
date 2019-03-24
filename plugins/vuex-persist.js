@@ -6,7 +6,10 @@ export default ({ store }) => {
             reducer: state => ({
                 location: state.location,
                 showCongestionPercentages: state.showCongestionPercentages,
+                locale: state.locale,
             }),
         }).plugin(store);
+
+
     });
 };

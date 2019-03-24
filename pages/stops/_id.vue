@@ -7,10 +7,10 @@
         <main>
             <section
                 v-if="hasDepartures"
-                class="departures"
+                class="departures-list"
             >
-                <h2 class="subtitle">
-                    Departures congestion
+                <h2 class="departures-list__title">
+                    {{ $t('departureList.congestionTitle') }}
                 </h2>
                 <departure-list
                     :departures="departures"
@@ -18,21 +18,21 @@
                 />
                 <footer
                     v-if="hasDepartures"
-                    class="departures__actions"
+                    class="departures-list__actions"
                 >
                     <button
                         v-if="!showCongestionPercentages"
-                        class="button departures__action"
+                        class="button departures-list__action"
                         @click="toggleCongestionPercentages"
                     >
-                        <span>Show percentages</span>
+                        <span>{{ $t('departureList.showCongestionPercentagesAction') }}</span>
                     </button>
                     <button
                         v-if="showCongestionPercentages"
-                        class="button departures__action"
+                        class="button departures-list__action"
                         @click="toggleCongestionPercentages"
                     >
-                        <span>Show just status</span>
+                        <span>{{ $t('departureList.showCongestionStatusAction') }}</span>
                     </button>
                 </footer>
             </section>
@@ -40,21 +40,24 @@
                 v-if="!hasDepartures"
                 class="no-content-message"
             >
-                No departures found.
+                {{ $t('departureList.noDeparturesFound') }}
             </p>
         </main>
+        <page-footer />
     </div>
 </template>
 
 <script type="text/javascript">
     import axios from '~/plugins/axios';
     import PageHeader from '~/components/page-header';
+    import PageFooter from '~/components/page-footer';
     import DepartureList from '~/components/departure-list';
     import { mapState, mapGetters, mapMutations } from 'vuex';
 
     export default {
         components: {
             PageHeader,
+            PageFooter,
             DepartureList,
         },
         computed: {
@@ -72,7 +75,7 @@
                 const { name } = this.stop;
                 const { headsign } = this.routePattern;
 
-                return `${name} (towards ${headsign})`;
+                return `${name} (${this.$t('directionDescription', { headsign })})`;
             },
             stop() {
                 return this.getStopById(this.stopId);
@@ -102,11 +105,15 @@
 <style lang="scss" scoped>
     @import '../../assets/scss/includes/env';
 
-    .subtitle {
+    .departures-list {
+        margin: map-get($spacing-unit, 'double') 0;
+    }
+
+    .departures-list__title {
         font-size: map-get($font-size, 'base');
     }
 
-    .departures__actions {
+    .departures-list__actions {
         display: flex;
         flex-wrap: wrap;
         justify-content: flex-end;

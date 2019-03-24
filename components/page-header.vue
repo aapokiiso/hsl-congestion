@@ -9,7 +9,7 @@
                 class="button action action--back"
             >
                 <icon-chevron-left class="button__icon" />
-                <span>Back</span>
+                <span>{{ $t('commonAction.goBack') }}</span>
             </nuxt-link>
         </div>
         <h1 class="title">
@@ -24,6 +24,11 @@
     export default {
         components: {
             IconChevronLeft,
+        },
+        head() {
+            return {
+                title: this.title,
+            };
         },
         props: {
             title: {

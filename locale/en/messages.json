@@ -1,0 +1,37 @@
+{
+    "appName": "Is HSL tram no. 7 congested?",
+    "appDescription": {
+        "short": "Guesstimating how crowded HSL tram no. 7s are by looking at stop times over the duration of the trip.",
+        "long": "Have you ever hopped on to tram number 7 just to discover it's packed with people going in and out of Länsisatama? Ugh, what ever happened to having an entire tram section for yourself? Luckily for us, HSL has a top-notch API for real-time vehicle tracking. We can use it to guesstimate how crowded the trams are, by looking at stop times over the duration of the trip."
+    },
+    "localeName": {
+        "fi": "Finnish",
+        "en": "English"
+    },
+    "commonAction": {
+        "goBack": "Back"
+    },
+    "congestionStatus": {
+        "congested": "Full",
+        "notCongested": "Ok"
+    },
+    "directionDescription": "towards {headsign}",
+    "stopList": {
+        "nearestStopsTitle": "Nearest stops",
+        "nearestStopsFindAction": "Find nearest stops",
+        "nearestStopsRefreshAction": "Refresh nearest stops",
+        "nearestStopsRefreshSuccess": "Refreshed!",
+        "allStopsTitle": "All stops",
+        "noStopsFound": "No stops found."
+    },
+    "departureList": {
+        "congestionTitle": "Departures congestion",
+        "showCongestionPercentagesAction": "Show percentages",
+        "showCongestionStatusAction": "Show just status",
+        "noDeparturesFound": "No departures found."
+    },
+    "appFooter": {
+        "title": "What is this?",
+        "localeSwitcherTitle": "Switch language"
+    }
+}
