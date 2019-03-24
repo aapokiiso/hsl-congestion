@@ -5,17 +5,43 @@
             back-action="/"
         />
         <main>
+            <section
+                v-if="hasDepartures"
+                class="departures"
+            >
+                <h2 class="subtitle">
+                    Departures congestion
+                </h2>
+                <departure-list
+                    :departures="departures"
+                    :show-percentages="showCongestionPercentages"
+                />
+                <footer
+                    v-if="hasDepartures"
+                    class="departures__actions"
+                >
+                    <button
+                        v-if="!showCongestionPercentages"
+                        class="button departures__action"
+                        @click="toggleCongestionPercentages"
+                    >
+                        <span>Show percentages</span>
+                    </button>
+                    <button
+                        v-if="showCongestionPercentages"
+                        class="button departures__action"
+                        @click="toggleCongestionPercentages"
+                    >
+                        <span>Show just status</span>
+                    </button>
+                </footer>
+            </section>
             <p
                 v-if="!hasDepartures"
                 class="no-content-message"
             >
                 No departures found.
             </p>
-            <departure-list
-                v-if="hasDepartures"
-                :departures="departures"
-                :show-percentages="isInDebugMode"
-            />
         </main>
     </div>
 </template>
@@ -24,7 +50,7 @@
     import axios from '~/plugins/axios';
     import PageHeader from '~/components/page-header';
     import DepartureList from '~/components/departure-list';
-    import { mapState, mapGetters } from 'vuex';
+    import { mapState, mapGetters, mapMutations } from 'vuex';
 
     export default {
         components: {
@@ -33,7 +59,7 @@
         },
         computed: {
             ...mapState([
-                'isInDebugMode',
+                'showCongestionPercentages',
             ]),
             ...mapGetters([
                 'getStopById',
@@ -65,5 +91,25 @@
                 departures,
             };
         },
+        methods: {
+            ...mapMutations([
+                'toggleCongestionPercentages',
+            ]),
+        },
     };
 </script>
+
+<style lang="scss" scoped>
+    @import '../../assets/scss/includes/env';
+
+    .subtitle {
+        font-size: map-get($font-size, 'base');
+    }
+
+    .departures__actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        margin: map-get($spacing-unit, 'base');
+    }
+</style>

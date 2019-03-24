@@ -6,9 +6,9 @@
         >
             <nuxt-link
                 :to="backAction"
-                class="action action--back"
+                class="button action action--back"
             >
-                <icon-chevron-left class="action__icon" />
+                <icon-chevron-left class="button__icon" />
                 <span>Back</span>
             </nuxt-link>
         </div>
@@ -47,6 +47,14 @@
 <style lang="scss" scoped>
     @import '../assets/scss/includes/env';
 
+    // ----------------------------------------------------------------------------
+    // #PAGE-HEADER
+    //
+    // Footnotes:
+    // [1] In case title is long, it gets wrapped under actions. Work around that
+    //     by transferring header bottom padding as margin to actions & title.
+    // ----------------------------------------------------------------------------
+
     .app-header {
         display: flex;
         align-items: center;
@@ -54,19 +62,16 @@
         background-color: map-get($color-palette, 'theme');
         color: map-get($color-palette, 'theme-contrast');
         position: relative;
-        padding: map-get($spacing-unit, 'base');
+        padding: map-get($spacing-unit, 'base') map-get($spacing-unit, 'base') 0; // [1]
     }
 
     .actions {
         margin-right: map-get($spacing-unit, 'base');
+        margin-bottom: map-get($spacing-unit, 'base'); // [1]
     }
 
     .action {
-        display: inline-flex;
-        line-height: map-get($spacing-unit, 'base');
-        padding: map-get($spacing-unit, 'crack');
         background-color: map-get($color-palette, 'theme-dark');
-        border-radius: map-get($border-radius, 'button');
 
         &:hover,
         &:focus {
@@ -74,17 +79,8 @@
         }
     }
 
-    .action__icon {
-        float: left;
-        width: map-get($spacing-unit, 'base');
-        height: map-get($spacing-unit, 'base');
-        fill: map-get($color-palette, 'theme-contrast');
-        margin-right: map-get($spacing-unit, 'crack');
-    }
-
     .title {
-        margin: 0;
-        padding: map-get($spacing-unit, 'crack');
+        margin: 0 0 map-get($spacing-unit, 'base'); // [1]
         font-size: map-get($font-size, 'base');
     }
 </style>

@@ -25,6 +25,33 @@ main {
     padding: map-get($spacing-unit, 'base');
 }
 
+.button {
+    display: inline-flex;
+    padding: map-get($spacing-unit, 'golden');
+    font-size: map-get($font-size, 'base');
+    line-height: map-get($spacing-unit, 'base');
+    background-color: map-get($color-palette, 'theme');
+    color: map-get($color-palette, 'theme-contrast');
+    border-radius: map-get($border-radius, 'button');
+    border: 0;
+    box-shadow: map-get($box-shadow, 'button');
+    cursor: pointer;
+    transition: background-color map-get($transition-time, 'short-distance') ease;
+
+    &:hover,
+    &:focus {
+        background-color: map-get($color-palette, 'theme-dark');
+    }
+}
+
+.button__icon {
+    float: left;
+    width: map-get($spacing-unit, 'base');
+    height: map-get($spacing-unit, 'base');
+    fill: map-get($color-palette, 'theme-contrast');
+    margin-right: map-get($spacing-unit, 'crack');
+}
+
 .no-content-message {
     margin: 0;
 }
