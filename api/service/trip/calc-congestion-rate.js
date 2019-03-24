@@ -10,7 +10,7 @@ module.exports = async function calculateTripCongestionRate(tripId) {
 
     const durationsWithWeights = sortedStopDurations
         .map((duration, idx, arr) => [
-            getSignificantDuration(duration),
+            normalizeStopDuration(duration),
             getDurationWeight(idx, arr),
         ]);
 
@@ -63,11 +63,18 @@ async function getSortedStopDurations(tripId) {
  * passes through the doors, the doors get an extra timeout
  * of a few seconds. Ignore the base time in congestion calculation.
  *
+ * Cap stop duration to configured max stop duration. Assume that
+ * all durations longer than that are due to a technical issue
+ * (child trolley trying to get out but stuck, or something like that).
+ *
  * @param {Number} durationSeconds
  * @returns {Number}
  */
-function getSignificantDuration(durationSeconds) {
-    return Math.max(durationSeconds - appConfig.hsl.minStopSeconds, 0);
+function normalizeStopDuration(durationSeconds) {
+    return Math.min(
+        Math.max(durationSeconds - appConfig.hsl.minStopSeconds, 0),
+        appConfig.hsl.maxStopSeconds
+    );
 }
 
 /**
