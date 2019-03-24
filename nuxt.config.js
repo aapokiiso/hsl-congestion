@@ -1,9 +1,11 @@
 export default {
-    plugins: [
-        { src: '~/plugins/vuex-persist', ssr: false },
-    ],
     modules: [
         'nuxt-svg-loader',
+    ],
+    plugins: [
+        { src: '~/plugins/vuex-persist', ssr: false },
+        '~/plugins/i18n',
+        { src: '~/plugins/i18n-restore', ssr: false },
     ],
     env: {
         apiBaseUrl: process.env.API_URL,

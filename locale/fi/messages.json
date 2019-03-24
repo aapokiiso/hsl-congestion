@@ -1,0 +1,37 @@
+{
+    "appName": "Onko seiska täynnä?",
+    "appDescription": {
+        "short": "Appi arvioi, kuinka täynnä seiskan ratikat ovat pysähtymisaikojen perusteella.",
+        "long": "Oletko koskaan hypännyt seiskan ratikan kyytiin vain huomataksesi, että se on täynnä ihmisiä matkalla Länsisatamaan? Pfft, mistä lähtien vaunussa ei ole saanut istua ilman kyynärpääkontaktia? Onneksi HSL tarjoaa mahtavan rajapinnan kulkuneuvojen reaaliaikaiseen seurantaan. Vaunujen pysähtymisaikojen perusteella voimme arvioida kuinka täynnä ne ovat."
+    },
+    "localeName": {
+        "fi": "Suomeksi",
+        "en": "Englanniksi"
+    },
+    "commonAction": {
+        "goBack": "Takaisin"
+    },
+    "congestionStatus": {
+        "congested": "Täynnä",
+        "notCongested": "Ok"
+    },
+    "directionDescription": "suuntana {headsign}",
+    "stopList": {
+        "nearestStopsTitle": "Lähimmät pysäkit",
+        "nearestStopsFindAction": "Etsi pysäkit",
+        "nearestStopsRefreshAction": "Päivitä pysäkit",
+        "nearestStopsRefreshSuccess": "Päivitetty!",
+        "allStopsTitle": "Kaikki pysäkit",
+        "noStopsFound": "Pysäkkejä ei löytynyt."
+    },
+    "departureList": {
+        "congestionTitle": "Lähtöjen ruuhkaisuus",
+        "showCongestionPercentagesAction": "Näytä prosentit",
+        "showCongestionStatusAction": "Näytä pelkkä status",
+        "noDeparturesFound": "Lähtöjä ei löytynyt."
+    },
+    "appFooter": {
+        "title": "Mikä tämä on?",
+        "localeSwitcherTitle": "Vaihda kieli"
+    }
+}

@@ -40,11 +40,10 @@
         methods: {
             directionDescription(stop) {
                 const routePattern = this.getRoutePatternForStop(stop.id);
-                if (routePattern) {
-                    return `towards ${routePattern.headsign}`;
-                }
 
-                return null;
+                return routePattern
+                    ? this.$t('directionDescription', { headsign: routePattern.headsign })
+                    : null;
             },
             sortStopsAlphabetically(stop1, stop2) {
                 const nameComparison = stop1.name.localeCompare(stop2.name);

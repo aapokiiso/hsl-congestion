@@ -22,7 +22,7 @@ a {
 }
 
 main {
-    padding: map-get($spacing-unit, 'base');
+    padding: 0 map-get($spacing-unit, 'base');
 }
 
 .button {
@@ -42,6 +42,10 @@ main {
     &:focus {
         background-color: map-get($color-palette, 'theme-dark');
     }
+
+    &:disabled {
+        cursor: default;
+    }
 }
 
 .button__icon {
@@ -50,6 +54,21 @@ main {
     height: map-get($spacing-unit, 'base');
     fill: map-get($color-palette, 'theme-contrast');
     margin-right: map-get($spacing-unit, 'crack');
+}
+
+.button--flush {
+    background-color: transparent;
+    color: map-get($color-palette, 'text');
+    box-shadow: none;
+
+    .button__icon {
+        fill: map-get($color-palette, 'text');
+    }
+
+    &:hover,
+    &:focus {
+        background-color: transparent;
+    }
 }
 
 .no-content-message {

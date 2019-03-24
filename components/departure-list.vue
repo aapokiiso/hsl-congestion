@@ -41,7 +41,7 @@
         },
         methods: {
             formatDepartureTime(departureTime) {
-                return moment(departureTime).format('LT');
+                return this.$d(moment(departureTime).toDate(), 'time');
             },
             getCongestionText(congestionRate) {
                 if (this.showPercentages) {
@@ -52,8 +52,8 @@
                 }
 
                 return this.isCongested(congestionRate)
-                    ? 'FULL'
-                    : 'OK';
+                    ? this.$t('congestionStatus.isCongested')
+                    : this.$t('congestionStatus.notCongested');
             },
             isCongested(congestionRate) {
                 const congestionThreshold = 0.8;
