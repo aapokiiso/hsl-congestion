@@ -1,4 +1,7 @@
 export default {
+    plugins: [
+        { src: '~/plugins/vuex-persist', ssr: false },
+    ],
     modules: [
         'nuxt-svg-loader',
     ],
