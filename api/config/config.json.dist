@@ -26,7 +26,6 @@
     },
     "hsl": {
         "stopRadiusMeters": 30,
-        "minStopSeconds": 5,
         "maxStopSeconds": 30,
         "maxTripAgeDays": 2
     }

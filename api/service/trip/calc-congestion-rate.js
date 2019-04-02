@@ -58,21 +58,17 @@ async function getSortedStopDurations(tripId) {
 }
 
 /**
- * If a tram stops, the doors will be open at least a set
- * amount of time before they can close. Every time someone
- * passes through the doors, the doors get an extra timeout
- * of a few seconds. Ignore the base time in congestion calculation.
- *
- * Cap stop duration to configured max stop duration. Assume that
+ * Cap stop duration to configured max stop duration. Assuming that
  * all durations longer than that are due to a technical issue
- * (child trolley trying to get out but stuck, or something like that).
+ * (child trolley trying to get out but stuck, or something like that),
+ * there's no point in inflating the congestion rate because of that.
  *
  * @param {Number} durationSeconds
  * @returns {Number}
  */
 function normalizeStopDuration(durationSeconds) {
     return Math.min(
-        Math.max(durationSeconds - appConfig.hsl.minStopSeconds, 0),
+        durationSeconds,
         appConfig.hsl.maxStopSeconds
     );
 }
