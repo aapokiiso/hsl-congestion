@@ -2,7 +2,7 @@
 
 const appConfig = require('../../config');
 const sortByIndex = require('../../include/sort-by-index');
-const findTripPassedStops = require('./find-passed-stops');
+const findStopsBeenTo = require('./find-stops-been-to');
 const calculateTripDurationAtStop = require('./calc-duration-at-stop');
 
 module.exports = async function calculateTripCongestionRate(tripId) {
@@ -41,10 +41,10 @@ module.exports = async function calculateTripCongestionRate(tripId) {
  * @returns {Array<Number>}
  */
 async function getSortedStopDurations(tripId) {
-    const passedStops = await findTripPassedStops(tripId);
+    const stopsBeenTo = await findStopsBeenTo(tripId);
 
     const stopDurations = await Promise.all(
-        passedStops.map(async stop => [stop, await calculateTripDurationAtStop(tripId, stop.id)])
+        stopsBeenTo.map(async stop => [stop, await calculateTripDurationAtStop(tripId, stop.id)])
     );
 
     return stopDurations
@@ -52,7 +52,7 @@ async function getSortedStopDurations(tripId) {
             const [stopA] = a;
             const [stopB] = b;
 
-            return sortByIndex(passedStops)(stopA, stopB);
+            return sortByIndex(stopsBeenTo)(stopA, stopB);
         })
         .map(([stop, stopDuration]) => stopDuration);
 }

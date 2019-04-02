@@ -4,7 +4,7 @@ const Sequelize = require('sequelize');
 const initOrm = require('../../orm');
 const sortByIndex = require('../../include/sort-by-index');
 
-module.exports = async function findTripPassedStops(tripId) {
+module.exports = async function findStopsBeenTo(tripId) {
     const orm = await initOrm();
 
     const tripStopsBeenTo = await orm.models.TripStop.findAll({
@@ -22,18 +22,16 @@ module.exports = async function findTripPassedStops(tripId) {
     });
 
     const stopIdsBeenTo = tripStopsBeenTo.map(tripStop => tripStop.get('stopId'));
-    // Assume that latest stop hasn't been passed yet.
-    const stopIdsPassed = stopIdsBeenTo.slice(0, -1);
 
     const stops = await orm.models.Stop.findAll({
         where: {
             id: {
-                [Sequelize.Op.in]: stopIdsPassed,
+                [Sequelize.Op.in]: stopIdsBeenTo,
             },
         },
     });
 
     return stops
         .map(stop => stop.get({ plain: true }))
-        .sort(sortByIndex(stopIdsPassed));
+        .sort(sortByIndex(stopIdsBeenTo));
 };
