@@ -15,7 +15,7 @@ module.exports = function (sequelize, DataTypes) {
     });
 
     Trip.associate = function (models) {
-        models.Trip.belongsTo(models.RoutePattern, { as: 'routePattern' });
+        models.Trip.belongsTo(models.RoutePattern, { as: 'routePattern', onDelete: 'cascade' });
     };
 
     return Trip;

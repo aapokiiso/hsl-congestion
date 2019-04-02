@@ -19,7 +19,7 @@ module.exports = function importRoutePatternModel(sequelize, DataTypes) {
     });
 
     RoutePattern.associate = function (models) {
-        models.RoutePattern.belongsTo(models.Route, { as: 'route' });
+        models.RoutePattern.belongsTo(models.Route, { as: 'route', onDelete: 'cascade' });
     };
 
     return RoutePattern;

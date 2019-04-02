@@ -16,8 +16,8 @@ module.exports = function (sequelize, DataTypes) {
     });
 
     TripStop.associate = function (models) {
-        models.TripStop.belongsTo(models.Trip, { as: 'trip' });
-        models.TripStop.belongsTo(models.Stop, { as: 'stop' });
+        models.TripStop.belongsTo(models.Trip, { as: 'trip', onDelete: 'cascade' });
+        models.TripStop.belongsTo(models.Stop, { as: 'stop', onDelete: 'cascade' });
     };
 
     return TripStop;
