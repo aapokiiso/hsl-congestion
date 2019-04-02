@@ -7,11 +7,11 @@ module.exports = async function calculateTripDurationAtStop(tripId, stopId) {
     const timestampsLog = await getTimestampsLog(tripId, stopId);
 
     if (timestampsLog.length) {
-        const [firstSeen] = timestampsLog;
-        const [lastSeen] = timestampsLog.reverse();
-
-        return moment(lastSeen.seenAtStop)
-            .diff(moment(firstSeen.seenAtStop), 'seconds');
+        return timestampsLog
+            .reduce(groupTimestampsByDoorStatusReducer, [])
+            .map(mapTimestampGroupDurationWithDoorStatus)
+            .filter(timestampGroup => timestampGroup.doorsOpen)
+            .reduce(sumTimestampGroupDurationsReducer, 0);
     }
 
     // Trip has not been on stop yet,
@@ -20,6 +20,38 @@ module.exports = async function calculateTripDurationAtStop(tripId, stopId) {
     return 0;
 };
 
+function groupTimestampsByDoorStatusReducer(timestampGroups, currentTimestamp) {
+    const [previousGroup] = timestampGroups.slice().reverse();
+
+    if (previousGroup && previousGroup.doorsOpen === currentTimestamp.doorsOpen) {
+        previousGroup.timestamps.push(currentTimestamp);
+    } else {
+        timestampGroups.push({
+            doorsOpen: currentTimestamp.doorsOpen,
+            timestamps: [currentTimestamp],
+        });
+    }
+
+    return timestampGroups;
+}
+
+function mapTimestampGroupDurationWithDoorStatus(timestampGroup) {
+    const [firstSeen] = timestampGroup.timestamps;
+    const [lastSeen] = timestampGroup.timestamps.slice().reverse();
+
+    const groupDurationInSeconds = moment(lastSeen.seenAtStop)
+        .diff(moment(firstSeen.seenAtStop), 'seconds');
+
+    return {
+        doorsOpen: timestampGroup.doorsOpen,
+        durationInSeconds: groupDurationInSeconds,
+    };
+}
+
+function sumTimestampGroupDurationsReducer(totalDurationInSeconds, timestampGroup) {
+    return totalDurationInSeconds + timestampGroup.durationInSeconds;
+}
+
 async function getTimestampsLog(tripId, stopId) {
     const orm = await initOrm();
 
@@ -27,7 +59,6 @@ async function getTimestampsLog(tripId, stopId) {
         where: {
             tripId,
             stopId,
-            doorsOpen: true,
         },
         order: [
             ['seenAtStop', 'ASC'],
