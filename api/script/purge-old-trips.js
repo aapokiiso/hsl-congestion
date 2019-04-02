@@ -5,7 +5,7 @@ const findAllRoutePatterns = require('../service/route-pattern/find-all');
 const purgeTripsByDate = require('../service/trip/purge-by-date');
 const appConfig = require('../config');
 
-(async function IIFE(){
+(async function IIFE() {
     const routePatterns = await findAllRoutePatterns();
     const oldTripThreshold = moment()
         .subtract(appConfig.hsl.maxTripAgeDays, 'days');
@@ -17,4 +17,8 @@ const appConfig = require('../config');
     );
 
     process.exit();
-}());
+}())
+    .catch(function (error) {
+        console.error(error);
+        process.exit();
+    });
