@@ -2,7 +2,6 @@
 
 const Sequelize = require('sequelize');
 const initOrm = require('../../orm');
-const sortByIndex = require('../../include/sort-by-index');
 
 module.exports = async function findStopsBeenTo(tripId) {
     const orm = await initOrm();
@@ -33,5 +32,7 @@ module.exports = async function findStopsBeenTo(tripId) {
 
     return stops
         .map(stop => stop.get({ plain: true }))
-        .sort(sortByIndex(stopIdsBeenTo));
+        .sort(function sortStopsFromFirstToLast(stopA, stopB) {
+            return stopIdsBeenTo.indexOf(stopB.id) - stopIdsBeenTo.indexOf(stopA.id);
+        });
 };

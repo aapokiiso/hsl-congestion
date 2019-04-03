@@ -1,7 +1,6 @@
 'use strict';
 
 const appConfig = require('../../config');
-const sortByIndex = require('../../include/sort-by-index');
 const findStopsBeenTo = require('./find-stops-been-to');
 const calculateTripDurationAtStop = require('./calc-duration-at-stop');
 
@@ -9,16 +8,21 @@ module.exports = async function calculateTripCongestionRate(tripId) {
     const sortedStopDurations = await getSortedStopDurations(tripId);
 
     const durationsWithWeights = sortedStopDurations
-        .map((duration, idx, arr) => [
-            normalizeStopDuration(duration),
-            getDurationWeight(idx, arr),
-        ]);
+        .map((duration, idx, arr) => {
+            const maxStopSeconds = getMaxStopDuration(idx, arr);
+
+            return [
+                normalizeStopDuration(duration, maxStopSeconds),
+                getDurationWeight(idx, arr),
+            ];
+        });
 
     const weightedMaxDuration = durationsWithWeights
-        .reduce((acc, val) => {
+        .reduce((acc, val, idx, arr) => {
             const [, weight] = val;
+            const maxStopSeconds = getMaxStopDuration(idx, arr);
 
-            return acc + appConfig.hsl.maxStopSeconds * weight;
+            return acc + maxStopSeconds * weight;
         }, 0);
 
     const weightedDuration = durationsWithWeights
@@ -48,11 +52,11 @@ async function getSortedStopDurations(tripId) {
     );
 
     return stopDurations
-        .sort((a, b) => {
+        .sort(function restoreStopOrder(a, b) {
             const [stopA] = a;
             const [stopB] = b;
 
-            return sortByIndex(stopsBeenTo)(stopA, stopB);
+            return stopsBeenTo.indexOf(stopA) - stopsBeenTo.indexOf(stopB);
         })
         .map(([stop, stopDuration]) => stopDuration);
 }
@@ -64,23 +68,43 @@ async function getSortedStopDurations(tripId) {
  * there's no point in inflating the congestion rate because of that.
  *
  * @param {Number} durationSeconds
+ * @param {Number} maxStopSeconds
  * @returns {Number}
  */
-function normalizeStopDuration(durationSeconds) {
+function normalizeStopDuration(durationSeconds, maxStopSeconds) {
     return Math.min(
         durationSeconds,
-        appConfig.hsl.maxStopSeconds
+        maxStopSeconds
     );
 }
 
 /**
  * The weight (eg. relevance) of the stop duration
- * decreases the further away into the past it goes.
+ * decreases the further away into the past it goes
+ * (with the rate of 1/x)
  *
  * @param {Number} idx
- * @param {Array<Number>} allDurations
+ * @param {Array<Number>} allDurations - ordered from first to last stop
  * @returns {Number}
  */
 function getDurationWeight(idx, allDurations) {
     return 1 / (allDurations.length - idx);
+}
+
+/**
+ * Congestion rate is approximated based on the highest possible congestion
+ * (doors open all the time).
+ *
+ * For origin terminus, the maximum "stop duration" is longer,
+ * because the tram idles at the station for ~12min before departure.
+ * During this time, people can enter the tram freely.
+ *
+ * @param {Number} idx
+ * @param {Array<Number>} allDurations - ordered from first to last stop
+ * @returns {Number}
+ */
+function getMaxStopDuration(idx, allDurations) {
+    return idx === 0
+        ? appConfig.hsl.terminusMaxIdleSeconds
+        : appConfig.hsl.maxStopSeconds;
 }

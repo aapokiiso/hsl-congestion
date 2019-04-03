@@ -52,11 +52,11 @@
                 }
 
                 return this.isCongested(congestionRate)
-                    ? this.$t('congestionStatus.isCongested')
+                    ? this.$t('congestionStatus.congested')
                     : this.$t('congestionStatus.notCongested');
             },
             isCongested(congestionRate) {
-                const congestionThreshold = 0.8;
+                const congestionThreshold = 0.6;
 
                 return congestionRate > congestionThreshold;
             },
