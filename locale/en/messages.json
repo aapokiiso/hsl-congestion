@@ -12,7 +12,7 @@
         "goBack": "Back"
     },
     "congestionStatus": {
-        "congested": "Full",
+        "congested": "Crowded",
         "notCongested": "Ok"
     },
     "directionDescription": "towards {headsign}",
