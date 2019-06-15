@@ -16,8 +16,7 @@ node_modules
 /.idea
 
 # App
-/api/config/*.json
-/.nuxt
+/config/*.json
 app.yaml
 
 # Let's Encrypt
