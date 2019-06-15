@@ -11,10 +11,12 @@
 // @lamiaoy/eslint-config
 
 module.exports = {
+    parser: 'babel-eslint',
     env: {
         node: true,
     },
     parserOptions: {
+        ecmaVersion: 2018,
         sourceType: 'script',
     },
     rules: {
