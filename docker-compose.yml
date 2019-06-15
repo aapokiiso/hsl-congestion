@@ -20,21 +20,12 @@ services:
             - 80
         depends_on:
             - database
-    track_stop_times:
+    api:
         image: node:10
-        command: npm run track-stop-times
+        command: npm run dev
         working_dir: /usr/app
         volumes: &appvolumes
             - .:/usr/app
-        networks:
-            - default
-        depends_on:
-            - database
-    api:
-        image: node:10
-        command: npm run api
-        working_dir: /usr/app
-        volumes: *appvolumes
         networks:
             - default
         depends_on:
@@ -43,6 +34,15 @@ services:
             PORT: 80
         ports:
             - 80
+    track_stop_times:
+        image: node:10
+        command: npm run track-stop-times
+        working_dir: /usr/app
+        volumes: *appvolumes
+        networks:
+            - default
+        depends_on:
+            - database
 networks:
     default:
     phpmyadmin:
