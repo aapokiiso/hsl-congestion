@@ -32,11 +32,6 @@ moment.tz.setDefault(envJson.timezone);
  * @property {String} env
  * @property {Number} hsl.stopRadiusMeters - Radius for what is registered for a
  *                                           trip (eg. vehicle) visiting a stop.
- * @property {Number} hsl.maxStopSeconds - Upper ceiling for stop congestion.
- *                                         Anything over this is classified as maximum congestion!
- * @property {Number} hsl.terminusMaxIdleSeconds - Approximate idle time at terminus before departure.
- *                                                 During this, doors can be opened continually.
- *                                                 For tram 7, this is around 12min at Länsiterminaali T2.
  * @property {Number} hsl.maxTripAgeDays - How long to persist trips in db
  * @property {Function} isProduction
  */

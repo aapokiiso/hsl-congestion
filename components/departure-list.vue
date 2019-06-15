@@ -46,7 +46,8 @@
             getCongestionText(congestionRate) {
                 if (this.showPercentages) {
                     const percentMultiplier = 100;
-                    const congestionPercent = Math.round(congestionRate * percentMultiplier);
+                    const congestionDiff = congestionRate - 1;
+                    const congestionPercent = Math.round(congestionDiff * percentMultiplier);
 
                     return `${congestionPercent}%`;
                 }
@@ -56,9 +57,7 @@
                     : this.$t('congestionStatus.notCongested');
             },
             isCongested(congestionRate) {
-                const congestionThreshold = 0.6;
-
-                return congestionRate > congestionThreshold;
+                return congestionRate > 1;
             },
             sortDeparturesAscending(departure1, departure2) {
                 const [trip1] = departure1;

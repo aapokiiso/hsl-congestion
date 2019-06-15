@@ -12,7 +12,7 @@
         "goBack": "Takaisin"
     },
     "congestionStatus": {
-        "congested": "Täynnä",
+        "congested": "Ruuhkaa",
         "notCongested": "Ok"
     },
     "directionDescription": "suuntana {headsign}",
