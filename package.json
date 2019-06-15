@@ -6,8 +6,8 @@
     "license": "UNLICENSED",
     "scripts": {
         "lint": "npm run lint:js",
-        "lint:js": "eslint --ext .js,.vue .",
-        "lint:js:fix": "eslint --fix --ext .js,.vue .",
+        "lint:js": "eslint .",
+        "lint:js:fix": "eslint --fix .",
         "track-stop-times": "node ./script/track-stop-times",
         "dev": "nodemon --exec npm start",
         "start": "node ./index"
