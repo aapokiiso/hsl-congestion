@@ -1,12 +1,12 @@
 'use strict';
 
 const Sequelize = require('sequelize');
-const initOrm = require('../../orm');
+const initDb = require('../../db');
 
 module.exports = async function findStopsBeenTo(tripId) {
-    const orm = await initOrm();
+    const db = await initDb();
 
-    const tripStopsBeenTo = await orm.models.TripStop.findAll({
+    const tripStopsBeenTo = await db.models.TripStop.findAll({
         attributes: [
             'stopId',
             [Sequelize.fn('MAX', Sequelize.col('seenAtStop')), 'lastSeenAtStop'],
@@ -22,7 +22,7 @@ module.exports = async function findStopsBeenTo(tripId) {
 
     const stopIdsBeenTo = tripStopsBeenTo.map(tripStop => tripStop.get('stopId'));
 
-    const stops = await orm.models.Stop.findAll({
+    const stops = await db.models.Stop.findAll({
         where: {
             id: {
                 [Sequelize.Op.in]: stopIdsBeenTo,

@@ -1,6 +1,6 @@
 'use strict';
 
-const initOrm = require('../../orm');
+const initDb = require('../../db');
 const queryGraphQL = require('../../include/query-graphql');
 
 module.exports = async function importStopsForRoutePattern(routePatternId) {
@@ -36,9 +36,9 @@ async function createStopToDb(routePatternId, stopData) {
         lon: longitude,
     } = stopData;
 
-    const orm = await initOrm();
+    const db = await initDb();
 
-    const stop = await orm.models.Stop.create({
+    const stop = await db.models.Stop.create({
         id: stopId,
         routePatternId,
         name,

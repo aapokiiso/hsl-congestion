@@ -1,7 +1,7 @@
 'use strict';
 
 const geolib = require('geolib');
-const initOrm = require('../../orm');
+const initDb = require('../../db');
 const appConfig = require('../../config');
 
 module.exports = async function findStopByPositionForRoutePattern(routePatternId, vehicleLatitude, vehicleLongitude) {
@@ -9,9 +9,9 @@ module.exports = async function findStopByPositionForRoutePattern(routePatternId
         return [];
     }
 
-    const orm = await initOrm();
+    const db = await initDb();
 
-    const stops = await orm.models.Stop
+    const stops = await db.models.Stop
         .findAll({
             where: {
                 routePatternId,

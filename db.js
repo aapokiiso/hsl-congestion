@@ -25,7 +25,7 @@ function initConnection() {
 }
 
 async function importModels(sequelize) {
-    const modelsDir = path.resolve(__dirname, 'orm');
+    const modelsDir = path.resolve(__dirname, 'model');
 
     const fileNames = await getFileNames(modelsDir);
 

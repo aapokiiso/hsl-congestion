@@ -1,11 +1,11 @@
 'use strict';
 
-const initOrm = require('../../orm');
+const initDb = require('../../db');
 
 module.exports = async function findAllRoutePatterns() {
-    const orm = await initOrm();
+    const db = await initDb();
 
-    const routePatterns = await orm.models.RoutePattern.findAll();
+    const routePatterns = await db.models.RoutePattern.findAll();
 
     return routePatterns
         .map(routePattern => routePattern.get({ plain: true }));

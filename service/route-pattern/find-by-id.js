@@ -1,6 +1,6 @@
 'use strict';
 
-const initOrm = require('../../orm');
+const initDb = require('../../db');
 const importRoutePattern = require('./import-by-id');
 
 module.exports = async function findRoutePattern(routePatternId) {
@@ -10,9 +10,9 @@ module.exports = async function findRoutePattern(routePatternId) {
 };
 
 async function findFromDb(routePatternId) {
-    const orm = await initOrm();
+    const db = await initDb();
 
-    const pattern = await orm.models.RoutePattern.findByPk(routePatternId);
+    const pattern = await db.models.RoutePattern.findByPk(routePatternId);
 
     return pattern ? pattern.get({ plain: true }) : null;
 }
