@@ -1,3 +1,17 @@
+Bugfix:
+- Apparently, stops can belong to multiple routepatterns. Need to refactor.
+track_stop_times_1  |   errors:
+track_stop_times_1  |    [ ValidationErrorItem {
+track_stop_times_1  |        message: 'PRIMARY must be unique',
+track_stop_times_1  |        type: 'unique violation',
+track_stop_times_1  |        path: 'PRIMARY',
+track_stop_times_1  |        value: 'HSL:1203418',
+track_stop_times_1  |        origin: 'DB',
+track_stop_times_1  |        instance: [Stop],
+track_stop_times_1  |        validatorKey: 'not_unique',
+track_stop_times_1  |        validatorName: null,
+track_stop_times_1  |        validatorArgs: [] } ],
+
 Code quality:
 - repository pattern
 - don't create in find services

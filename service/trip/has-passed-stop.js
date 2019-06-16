@@ -1,7 +1,7 @@
 'use strict';
 
 const Sequelize = require('sequelize');
-const initOrm = require('../../orm');
+const initDb = require('../../db');
 
 module.exports = async function hasTripPassedStop(tripId, stopId) {
     const lastSeenAtStop = await getLastSeenAtStop(tripId, stopId);
@@ -12,9 +12,9 @@ module.exports = async function hasTripPassedStop(tripId, stopId) {
 };
 
 async function getLastSeenAtStop(tripId, stopId) {
-    const orm = await initOrm();
+    const db = await initDb();
 
-    const lastSeenAtStop = await orm.models.TripStop.findOne({
+    const lastSeenAtStop = await db.models.TripStop.findOne({
         where: {
             tripId,
             stopId,
@@ -30,9 +30,9 @@ async function getLastSeenAtStop(tripId, stopId) {
 }
 
 async function hasBeenSeenAfter(tripId, seenAt) {
-    const orm = await initOrm();
+    const db = await initDb();
 
-    return orm.models.TripStop.findOne({
+    return db.models.TripStop.findOne({
         where: {
             tripId,
             seenAtStop: {

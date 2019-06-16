@@ -10,7 +10,7 @@
 
 const Sequelize = require('sequelize');
 const NodeCache = require('node-cache');
-const initOrm = require('../../orm');
+const initDb = require('../../db');
 const calcDurationAtStop = require('./calc-duration-at-stop');
 
 const averageStopDurationsCache = new NodeCache({ stdTTL: 86400, checkperiod: 0 });
@@ -38,9 +38,9 @@ module.exports = async function calculateAverageDurationAtStop(stopId) {
 };
 
 async function getTripIds(stopId) {
-    const orm = await initOrm();
+    const db = await initDb();
 
-    const timestamps = await orm.models.TripStop.findAll({
+    const timestamps = await db.models.TripStop.findAll({
         attributes: [
             [Sequelize.fn('DISTINCT', Sequelize.col('tripId')), 'tripId'],
         ],

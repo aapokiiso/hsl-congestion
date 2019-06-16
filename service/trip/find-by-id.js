@@ -1,11 +1,11 @@
 'use strict';
 
-const initOrm = require('../../orm');
+const initDb = require('../../db');
 
 module.exports = async function findTripById(tripId) {
-    const orm = await initOrm();
+    const db = await initDb();
 
-    const trip = await orm.models.Trip.findByPk(tripId);
+    const trip = await db.models.Trip.findByPk(tripId);
 
     return trip ? trip.get({ plain: true }) : null;
 };

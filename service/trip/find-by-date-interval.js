@@ -2,12 +2,12 @@
 
 const Sequelize = require('sequelize');
 const moment = require('moment-timezone');
-const initOrm = require('../../orm');
+const initDb = require('../../db');
 
 module.exports = async function findTripsByDateInterval(routePatternId, offsetDate, limitDate = null) {
-    const orm = await initOrm();
+    const db = await initDb();
 
-    const trips = await orm.models.Trip
+    const trips = await db.models.Trip
         .findAll({
             where: {
                 routePatternId,

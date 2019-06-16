@@ -1,6 +1,6 @@
 'use strict';
 
-const initOrm = require('../../orm');
+const initDb = require('../../db');
 const queryGraphQL = require('../../include/query-graphql');
 const findRoute = require('./../route/find-by-id');
 const importStops = require('../stop/import-for-route-pattern');
@@ -35,9 +35,9 @@ async function findDataFromApi(routePatternId) {
 }
 
 async function createRoutePatternToDb(routePatternId, routeId, directionId, headsign) {
-    const orm = await initOrm();
+    const db = await initDb();
 
-    const pattern = await orm.models.RoutePattern.create({
+    const pattern = await db.models.RoutePattern.create({
         id: routePatternId,
         routeId,
         direction: directionId,

@@ -1,6 +1,6 @@
 'use strict';
 
-const initOrm = require('../../orm');
+const initDb = require('../../db');
 const moment = require('moment-timezone');
 
 module.exports = async function calculateTripDurationAtStop(tripId, stopId) {
@@ -53,9 +53,9 @@ function sumTimestampGroupDurationsReducer(totalDurationInSeconds, timestampGrou
 }
 
 async function getTimestampsLog(tripId, stopId) {
-    const orm = await initOrm();
+    const db = await initDb();
 
-    const timestamps = await orm.models.TripStop.findAll({
+    const timestamps = await db.models.TripStop.findAll({
         where: {
             tripId,
             stopId,

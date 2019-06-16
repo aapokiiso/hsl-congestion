@@ -1,11 +1,11 @@
 'use strict';
 
-const initOrm = require('../../orm');
+const initDb = require('../../db');
 
 module.exports = async function findById(stopId) {
-    const orm = await initOrm();
+    const db = await initDb();
 
-    const stop = await orm.models.Stop.findByPk(stopId);
+    const stop = await db.models.Stop.findByPk(stopId);
 
     return stop ? stop.get({ plain: true }) : null;
 };

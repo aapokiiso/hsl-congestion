@@ -1,6 +1,6 @@
 'use strict';
 
-const initOrm = require('../../orm');
+const initDb = require('../../db');
 const queryGraphQL = require('../../include/query-graphql');
 
 module.exports = async function importRoute(routeId) {
@@ -23,9 +23,9 @@ async function findDataFromApi(routeId) {
 async function createRouteToDb(routeId, routeData) {
     const { mode, shortName: name } = routeData;
 
-    const orm = await initOrm();
+    const db = await initDb();
 
-    const route = await orm.models.Route.create({
+    const route = await db.models.Route.create({
         id: routeId,
         mode,
         name,

@@ -1,12 +1,12 @@
 'use strict';
 
-const initOrm = require('../../orm');
+const initDb = require('../../db');
 const moment = require('moment-timezone');
 
 module.exports = async function addTripStopSighting(tripId, stopId, seenAtStop, hasDoorsOpen) {
-    const orm = await initOrm();
+    const db = await initDb();
 
-    const tripStop = await orm.models.TripStop.create({
+    const tripStop = await db.models.TripStop.create({
         tripId,
         stopId,
         seenAtStop: moment(seenAtStop).toDate(),

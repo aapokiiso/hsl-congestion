@@ -1,11 +1,11 @@
 'use strict';
 
-const initOrm = require('../../orm');
+const initDb = require('../../db');
 
 module.exports = async function findAllStops() {
-    const orm = await initOrm();
+    const db = await initDb();
 
-    const stops = await orm.models.Stop.findAll();
+    const stops = await db.models.Stop.findAll();
 
     return stops
         .map(stop => stop.get({ plain: true }));
