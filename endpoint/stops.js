@@ -2,8 +2,7 @@
 
 const NodeCache = require('node-cache');
 const statusCodes = require('http-status-codes');
-const findAllStops = require('../service/stop/find-all');
-const findStopById = require('../service/stop/find-by-id');
+const stopRepository = require('../service/stop-repository');
 
 const stopsCache = new NodeCache({ stdTTL: 3600, checkperiod: 0 });
 const router = require('express').Router(); // eslint-disable-line new-cap
@@ -21,9 +20,12 @@ router.get('/stops', async function (req, res) {
     }
 
     async function cacheStops() {
-        const stops = await findAllStops();
+        const stops = await stopRepository.getList();
 
-        stopsCache.set(cacheKey, stops);
+        stopsCache.set(
+            cacheKey,
+            stops.map(stop => stop.get({plain: true}))
+        );
 
         return stops;
     }
@@ -44,9 +46,9 @@ router.get('/stops/:stopId', async function (req, res) {
     }
 
     async function cacheStop() {
-        const stop = await findStopById(stopId);
+        const stop = await stopRepository.getById(stopId);
 
-        stopsCache.set(cacheKey, stop);
+        stopsCache.set(cacheKey, stop.get({plain: true}));
 
         return stop;
     }

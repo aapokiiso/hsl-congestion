@@ -27,7 +27,7 @@ moment.tz.setDefault(envJson.timezone);
  * @property {String} ssl.ca - SSL certificate authority
  * @property {String} mqtt.host
  * @property {number} mqtt.port
- * @property {String} mqtt.topic
+ * @property {Array<String>} mqtt.topics
  * @property {String} graphql.url
  * @property {String} env
  * @property {Number} hsl.stopRadiusMeters - Radius for what is registered for a

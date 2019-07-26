@@ -2,43 +2,49 @@
 
 const NodeCache = require('node-cache');
 const statusCodes = require('http-status-codes');
-const sortByIndex = require('../include/sort-by-index');
-const findUpcomingTripsByStop = require('../service/trip/find-upcoming-by-stop');
-const calcTripCongestionRate = require('../service/trip/calc-congestion-rate');
+const stopDepartureProvider = require('../service/stop-departure-provider');
+const tripCongestionRateProvider = require('../service/trip-congestion-rate-provider');
 
-const departuresCache = new NodeCache({ stdTTL: 5, checkperiod: 0 });
+const departuresCache = new NodeCache({stdTTL: 5, checkperiod: 0});
 const router = require('express').Router(); // eslint-disable-line new-cap
 
 router.get('/departures/:stopId', async function (req, res) {
-    const { stopId } = req.params;
+    const {stopId} = req.params;
 
     try {
-        const congestionRates = departuresCache.get(stopId)
-            || await cacheCongestionRates(stopId);
+        const departures = departuresCache.get(stopId)
+            || await cacheDepartures(stopId);
 
-        res.status(statusCodes.OK).json(congestionRates);
+        res.status(statusCodes.OK).json(departures);
     } catch (e) {
         console.error(e);
         res.status(statusCodes.INTERNAL_SERVER_ERROR).json({});
     }
 });
 
-async function cacheCongestionRates(stopId) {
-    const upcomingTrips = await findUpcomingTripsByStop(stopId);
-    const congestionRates = await Promise.all(
-        upcomingTrips.map(async trip => [trip, await calcTripCongestionRate(trip.id)])
+async function cacheDepartures(stopId) {
+    const upcomingDepartures = await stopDepartureProvider.getList(stopId);
+
+    const departuresWithCongestionRates = await Promise.all(
+        upcomingDepartures.map(async departure => {
+            let congestionRate;
+            try {
+                congestionRate = await tripCongestionRateProvider.getCongestionRate(departure.tripId);
+            } catch (e) {
+                // Congestion rate couldn't be calculated.
+                congestionRate = null;
+            }
+
+            return [
+                departure,
+                congestionRate
+            ];
+        })
     );
 
-    const sortedCongestionRates = congestionRates.sort((a, b) => {
-        const [tripA] = a;
-        const [tripB] = b;
+    departuresCache.set(stopId, departuresWithCongestionRates);
 
-        return sortByIndex(upcomingTrips)(tripA, tripB);
-    });
-
-    departuresCache.set(stopId, sortedCongestionRates);
-
-    return sortedCongestionRates;
+    return departuresWithCongestionRates;
 }
 
 module.exports = router;
