@@ -2,8 +2,7 @@
 
 const NodeCache = require('node-cache');
 const statusCodes = require('http-status-codes');
-const findAllPatterns = require('../service/route-pattern/find-all');
-const findPatternById = require('../service/route-pattern/find-by-id');
+const routePatternRepository = require('../service/route-pattern-repository');
 
 const patternsCache = new NodeCache({ stdTTL: 3600, checkperiod: 0 });
 const router = require('express').Router(); // eslint-disable-line new-cap
@@ -21,9 +20,9 @@ router.get('/routePatterns', async function (req, res) {
     }
 
     async function cachePatterns() {
-        const patterns = await findAllPatterns();
+        const patterns = await routePatternRepository.getList();
 
-        patternsCache.set(cacheKey, patterns);
+        patternsCache.set(cacheKey, patterns.map(pattern => pattern.get({ plain: true })));
 
         return patterns;
     }
@@ -44,9 +43,9 @@ router.get('/routePatterns/:patternId', async function (req, res) {
     }
 
     async function cachePattern() {
-        const pattern = await findPatternById(patternId);
+        const pattern = await routePatternRepository.getById(patternId);
 
-        patternsCache.set(cacheKey, pattern);
+        patternsCache.set(cacheKey, pattern.get({ plain: true }));
 
         return pattern;
     }

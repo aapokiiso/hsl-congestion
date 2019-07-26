@@ -8,10 +8,6 @@ module.exports = function (sequelize, DataTypes) {
             primaryKey: true,
             comment: 'GTFS ID in HSL Routing API',
         },
-        departureTime: {
-            type: DataTypes.DATE,
-            allowNull: false,
-        },
     });
 
     Trip.associate = function (models) {

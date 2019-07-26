@@ -23,7 +23,7 @@ module.exports = function (sequelize, DataTypes) {
     });
 
     Stop.associate = function (models) {
-        models.Stop.belongsTo(models.RoutePattern, { as: 'routePattern', onDelete: 'cascade' });
+        models.Stop.belongsToMany(models.RoutePattern, { through: 'RoutePatternStops' });
     };
 
     return Stop;
