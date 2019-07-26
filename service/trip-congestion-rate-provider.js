@@ -1,13 +1,5 @@
 'use strict';
 
-/**
- * NOTICE OF LICENSE
- *
- * This source file is released under commercial license by Lamia Oy.
- *
- * @copyright Copyright (c) 2019 Lamia Oy (https://lamia.fi)
- */
-
 const tripPastStopsProvider = require('./trip-past-stops-provider');
 const stopLoadDurationProvider = require('./stop-load-duration-provider');
 const tripRepository = require('./trip-repository');

@@ -1,13 +1,5 @@
 'use strict';
 
-/**
- * NOTICE OF LICENSE
- *
- * This source file is released under commercial license by Lamia Oy.
- *
- * @copyright Copyright (c) 2019 Lamia Oy (https://lamia.fi)
- */
-
 const moment = require('moment-timezone');
 const hslGraphQL = require('../include/hsl-graphql');
 const departureTimeLib = require('../include/departure-time');
