@@ -41,7 +41,7 @@ module.exports = {
         // No trams have been recorded on the route pattern yet.
 
         return 0;
-    }
+    },
 };
 
 function sumLoadDurationFromTimestampsLog(timestampsLog) {
@@ -113,11 +113,11 @@ async function getTimestampsLogByRoutePattern(stopId, routePatternId) {
                         as: 'routePattern',
                         required: true,
                         where: {
-                            id: routePatternId
-                        }
-                    }
-                ]
-            }
+                            id: routePatternId,
+                        },
+                    },
+                ],
+            },
         ],
         where: {
             stopId,

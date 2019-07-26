@@ -26,7 +26,7 @@ module.exports = {
     convertRealtimeApiForRoutingApi(realtimeNextStopId) {
         if (this.isEndOfLine(realtimeNextStopId)) {
             throw new CouldNotParseError(
-                `Could not parse next stop GTFS ID, the trip is in end of line.`
+                'Could not parse next stop GTFS ID, the trip is in end of line.'
             );
         }
 

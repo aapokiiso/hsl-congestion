@@ -22,7 +22,7 @@ router.get('/routePatterns', async function (req, res) {
     async function cachePatterns() {
         const patterns = await routePatternRepository.getList();
 
-        patternsCache.set(cacheKey, patterns.map(pattern => pattern.get({plain: true})));
+        patternsCache.set(cacheKey, patterns.map(pattern => pattern.get({ plain: true })));
 
         return patterns;
     }
@@ -45,7 +45,7 @@ router.get('/routePatterns/:patternId', async function (req, res) {
     async function cachePattern() {
         const pattern = await routePatternRepository.getById(patternId);
 
-        patternsCache.set(cacheKey, pattern.get({plain: true}));
+        patternsCache.set(cacheKey, pattern.get({ plain: true }));
 
         return pattern;
     }

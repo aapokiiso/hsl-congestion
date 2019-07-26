@@ -34,7 +34,7 @@ module.exports = {
                 `Failed to find trip ID from HSL GraphQL API. Reason: '${e.message}'`
             );
         }
-    }
+    },
 };
 
 async function searchTripIdFromApi(routeGtfsId, directionId, departureDate, departureTimeSeconds) {

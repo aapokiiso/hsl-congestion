@@ -5,11 +5,11 @@ const statusCodes = require('http-status-codes');
 const stopDepartureProvider = require('../service/stop-departure-provider');
 const tripCongestionRateProvider = require('../service/trip-congestion-rate-provider');
 
-const departuresCache = new NodeCache({stdTTL: 5, checkperiod: 0});
+const departuresCache = new NodeCache({ stdTTL: 5, checkperiod: 0 });
 const router = require('express').Router(); // eslint-disable-line new-cap
 
 router.get('/departures/:stopId', async function (req, res) {
-    const {stopId} = req.params;
+    const { stopId } = req.params;
 
     try {
         const departures = departuresCache.get(stopId)
@@ -37,7 +37,7 @@ async function cacheDepartures(stopId) {
 
             return [
                 departure,
-                congestionRate
+                congestionRate,
             ];
         })
     );

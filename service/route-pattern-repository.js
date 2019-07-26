@@ -50,8 +50,8 @@ module.exports = {
         try {
             const patternData = await findRoutePatternDataFromApi(routePatternId);
 
-            const {route: routeData} = patternData;
-            const {gtfsId: routeId} = routeData;
+            const { route: routeData } = patternData;
+            const { gtfsId: routeId } = routeData;
 
             // Create route if it doesn't exist yet.
             try {
@@ -62,7 +62,7 @@ module.exports = {
                 }
             }
 
-            const {directionId, headsign} = patternData;
+            const { directionId, headsign } = patternData;
 
             return await createRoutePatternToDb(routePatternId, routeId, directionId, headsign);
         } catch (e) {
@@ -70,11 +70,11 @@ module.exports = {
                 `Could not save route pattern with ID '${routePatternId}'. Reason: ${e.message}`
             );
         }
-    }
+    },
 };
 
 async function findRoutePatternDataFromApi(routePatternId) {
-    const {pattern} = await hslGraphQL.query(
+    const { pattern } = await hslGraphQL.query(
         `{
             pattern(id: "${routePatternId}") {
                 directionId
@@ -85,7 +85,7 @@ async function findRoutePatternDataFromApi(routePatternId) {
             }
         }`,
         {
-            priority: hslGraphQL.requestPriority.high
+            priority: hslGraphQL.requestPriority.high,
         }
     );
 

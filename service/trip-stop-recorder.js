@@ -26,5 +26,5 @@ module.exports = {
                 `Failed to record trip stop. Reason: ${e.message}`
             );
         }
-    }
+    },
 };

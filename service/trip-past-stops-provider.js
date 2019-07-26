@@ -47,5 +47,5 @@ module.exports = {
             .sort(function sortStopsFromFirstToLast(stopA, stopB) {
                 return stopIdsBeenTo.indexOf(stopB.id) - stopIdsBeenTo.indexOf(stopA.id);
             });
-    }
+    },
 };

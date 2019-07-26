@@ -47,11 +47,11 @@ module.exports = {
                 `Could not save trip with ID '${tripId}'. Reason: ${e.message}`
             );
         }
-    }
+    },
 };
 
 async function findDataFromApi(tripId) {
-    const {trip} = await hslGraphQL.query(
+    const { trip } = await hslGraphQL.query(
         `{
             trip(id: "${tripId}") {
                 pattern {
@@ -60,7 +60,7 @@ async function findDataFromApi(tripId) {
             }
         }`,
         {
-            priority: hslGraphQL.requestPriority.high
+            priority: hslGraphQL.requestPriority.high,
         }
     );
 
@@ -69,11 +69,11 @@ async function findDataFromApi(tripId) {
 
 async function createTripToDb(tripId, tripData) {
     const {
-        pattern: routePatternData
+        pattern: routePatternData,
     } = tripData;
 
     const {
-        code: routePatternId
+        code: routePatternId,
     } = routePatternData;
 
     const db = await initDb();

@@ -41,12 +41,12 @@ module.exports = {
 
         if (!weightedAverageLoadDuration) {
             throw new InvalidStateError(
-                `Weighted average load duration for the trip doesn't exist, so the congestion rate cannot be calculated.`
-            )
+                'Weighted average load duration for the trip doesn\'t exist, so the congestion rate cannot be calculated.'
+            );
         }
 
         return weightedLoadDuration / weightedAverageLoadDuration;
-    }
+    },
 };
 
 /**

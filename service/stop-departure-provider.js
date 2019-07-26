@@ -28,8 +28,8 @@ module.exports = {
 
                 return {
                     tripId: trip.gtfsId,
-                    departureTime: convertSecondsToDepartureDate(realtimeDeparture)
-                }
+                    departureTime: convertSecondsToDepartureDate(realtimeDeparture),
+                };
             });
         } catch (e) {
             console.error(e);
@@ -38,7 +38,7 @@ module.exports = {
                 `Failed to find departures for stop with ID '${stopId}'`
             );
         }
-    }
+    },
 };
 
 async function searchDeparturesFromApi(stopId) {

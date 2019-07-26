@@ -34,11 +34,11 @@ module.exports = {
                 `Failed to find route pattern ID from HSL GraphQL API. Reason: '${e.message}'`
             );
         }
-    }
+    },
 };
 
 async function searchRoutePatternIdFromApi(routeGtfsId, directionId, departureDate, departureTimeSeconds) {
-    const {fuzzyTrip: trip} = await hslGraphQL.query(
+    const { fuzzyTrip: trip } = await hslGraphQL.query(
         `{
                 fuzzyTrip(route: "${routeGtfsId}", direction: ${directionId}, date: "${departureDate}", time: ${departureTimeSeconds}) {
                     pattern {
@@ -54,7 +54,7 @@ async function searchRoutePatternIdFromApi(routeGtfsId, directionId, departureDa
         );
     }
 
-    const {code: routePatternId} = trip.pattern;
+    const { code: routePatternId } = trip.pattern;
 
     return routePatternId;
 }

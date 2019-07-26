@@ -49,11 +49,11 @@ module.exports = {
                 `Could not save route with ID '${routeId}'. Reason: ${e.message}`
             );
         }
-    }
+    },
 };
 
 async function findDataFromApi(routeId) {
-    const {route} = await hslGraphQL.query(
+    const { route } = await hslGraphQL.query(
         `{
             route(id: "${routeId}") {
                 mode
@@ -61,7 +61,7 @@ async function findDataFromApi(routeId) {
             }
         }`,
         {
-            priority: hslGraphQL.requestPriority.high
+            priority: hslGraphQL.requestPriority.high,
         }
     );
 
@@ -69,7 +69,7 @@ async function findDataFromApi(routeId) {
 }
 
 async function createRouteToDb(routeId, routeData) {
-    const {mode, shortName: name} = routeData;
+    const { mode, shortName: name } = routeData;
 
     const db = await initDb();
 

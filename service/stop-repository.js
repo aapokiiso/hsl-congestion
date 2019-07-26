@@ -20,9 +20,9 @@ module.exports = {
         const stops = await db.models.Stop.findAll({
             where: {
                 id: {
-                    [Sequelize.Op.in]: stopIds
-                }
-            }
+                    [Sequelize.Op.in]: stopIds,
+                },
+            },
         });
 
         return stops;
@@ -61,7 +61,7 @@ module.exports = {
 
         const [stop, routePattern] = await Promise.all([
             await db.models.Stop.findByPk(stopId),
-            await db.models.RoutePattern.findByPk(routePatternId)
+            await db.models.RoutePattern.findByPk(routePatternId),
         ]);
 
         if (!stop) {
@@ -87,7 +87,7 @@ module.exports = {
 };
 
 async function findDataFromApi(stopId) {
-    const {stop} = await hslGraphQL.query(
+    const { stop } = await hslGraphQL.query(
         `{
             stop(id: "${stopId}") {
                 name
@@ -96,7 +96,7 @@ async function findDataFromApi(stopId) {
             }
         }`,
         {
-            priority: hslGraphQL.requestPriority.high
+            priority: hslGraphQL.requestPriority.high,
         }
     );
 

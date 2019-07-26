@@ -18,7 +18,7 @@ const tripStopRecorder = require('../service/trip-stop-recorder');
 
     mqttClient.on('message', async (topic, message) => {
         const messageStr = message.toString();
-        const {routeId, nextStopId} = parseTopic(topic);
+        const { routeId, nextStopId } = parseTopic(topic);
 
         if (nextStopIdLib.isEndOfLine(nextStopId)) {
             return;
@@ -26,11 +26,12 @@ const tripStopRecorder = require('../service/trip-stop-recorder');
 
         let vehiclePosition;
         try {
-            const {VP} = JSON.parse(messageStr);
+            const { VP } = JSON.parse(messageStr);
 
             vehiclePosition = VP;
         } catch (e) {
             console.error('Failed to parse vehicle position payload. Reason:', e, messageStr);
+
             return;
         }
 
@@ -38,7 +39,8 @@ const tripStopRecorder = require('../service/trip-stop-recorder');
         try {
             routePatternId = await findRoutePatternId(routeId, vehiclePosition);
         } catch (e) {
-            console.error('Failed to find vehicle position route pattern ID. Reason:', e)
+            console.error('Failed to find vehicle position route pattern ID. Reason:', e);
+
             return;
         }
 
@@ -47,6 +49,7 @@ const tripStopRecorder = require('../service/trip-stop-recorder');
             routePattern = await getOrCreateRoutePatternById(routePatternId);
         } catch (e) {
             console.error('Failed to get or create route pattern to database. Reason:', e);
+
             return;
         }
 
@@ -59,6 +62,7 @@ const tripStopRecorder = require('../service/trip-stop-recorder');
             }
         } catch (e) {
             console.error('Failed to get or create next stop to database. Reason:', e);
+
             return;
         }
 
@@ -67,6 +71,7 @@ const tripStopRecorder = require('../service/trip-stop-recorder');
             tripId = await findTripId(routeId, vehiclePosition);
         } catch (e) {
             console.error('Failed to find vehicle position trip ID. Reason:', e);
+
             return;
         }
 
@@ -75,6 +80,7 @@ const tripStopRecorder = require('../service/trip-stop-recorder');
             trip = await getOrCreateTripById(tripId);
         } catch (e) {
             console.error('Failed to get or create trip to database. Reason:', e);
+
             return;
         }
 
@@ -95,7 +101,7 @@ const tripStopRecorder = require('../service/trip-stop-recorder');
 
         return {
             routeId,
-            nextStopId
+            nextStopId,
         };
     }
 

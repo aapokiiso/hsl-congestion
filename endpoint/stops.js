@@ -24,7 +24,7 @@ router.get('/stops', async function (req, res) {
 
         stopsCache.set(
             cacheKey,
-            stops.map(stop => stop.get({plain: true}))
+            stops.map(stop => stop.get({ plain: true }))
         );
 
         return stops;
@@ -48,7 +48,7 @@ router.get('/stops/:stopId', async function (req, res) {
     async function cacheStop() {
         const stop = await stopRepository.getById(stopId);
 
-        stopsCache.set(cacheKey, stop.get({plain: true}));
+        stopsCache.set(cacheKey, stop.get({ plain: true }));
 
         return stop;
     }
