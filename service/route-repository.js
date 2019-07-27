@@ -1,7 +1,7 @@
 'use strict';
 
-const initDb = require('../db');
-const hslGraphQL = require('../include/hsl-graphql');
+const db = require('../db');
+const hslGraphQL = require('../hsl-graphql');
 const NoSuchEntityError = require('../error/no-such-entity');
 const CouldNotSaveError = require('../error/could-not-save');
 
@@ -12,8 +12,6 @@ module.exports = {
      * @throws NoSuchEntityError
      */
     async getById(routeId) {
-        const db = await initDb();
-
         const route = await db.models.Route.findByPk(routeId);
 
         if (!route) {
@@ -62,8 +60,6 @@ async function findDataFromApi(routeId) {
 
 async function createRouteToDb(routeId, routeData) {
     const { mode, shortName: name } = routeData;
-
-    const db = await initDb();
 
     const [route] = await db.models.Route.findOrCreate({
         where: {

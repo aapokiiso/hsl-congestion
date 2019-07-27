@@ -1,7 +1,7 @@
 'use strict';
 
 const moment = require('moment-timezone');
-const initDb = require('../db');
+const db = require('../db');
 const filterUnique = require('../include/filter-unique');
 
 module.exports = {
@@ -76,9 +76,7 @@ function sumTimestampGroupDurationsReducer(totalDurationInSeconds, timestampGrou
     return totalDurationInSeconds + timestampGroup.durationInSeconds;
 }
 
-async function getTimestampsLogByTrip(stopId, tripId) {
-    const db = await initDb();
-
+function getTimestampsLogByTrip(stopId, tripId) {
     return db.models.TripStop.findAll({
         where: {
             stopId,
@@ -90,9 +88,7 @@ async function getTimestampsLogByTrip(stopId, tripId) {
     });
 }
 
-async function getTimestampsLogByRoutePattern(stopId, routePatternId) {
-    const db = await initDb();
-
+function getTimestampsLogByRoutePattern(stopId, routePatternId) {
     return db.models.TripStop.findAll({
         include: [
             {
