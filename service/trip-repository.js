@@ -1,7 +1,7 @@
 'use strict';
 
-const initDb = require('../db');
-const hslGraphQL = require('../include/hsl-graphql');
+const db = require('../db');
+const hslGraphQL = require('../hsl-graphql');
 const NoSuchEntityError = require('../error/no-such-entity');
 const CouldNotSaveError = require('../error/could-not-save');
 
@@ -12,8 +12,6 @@ module.exports = {
      * @throws NoSuchEntityError
      */
     async getById(tripId) {
-        const db = await initDb();
-
         const trip = await db.models.Trip.findByPk(tripId);
 
         if (!trip) {
@@ -67,8 +65,6 @@ async function createTripToDb(tripId, tripData) {
     const {
         code: routePatternId,
     } = routePatternData;
-
-    const db = await initDb();
 
     const [trip] = await db.models.Trip.findOrCreate({
         where: {

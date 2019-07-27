@@ -24,9 +24,6 @@
             "/hfp/v1/journey/ongoing/tram/#"
         ]
     },
-    "graphql": {
-        "url": "https://api.digitransit.fi/routing/v1/routers/hsl/index/graphql"
-    },
     "hsl": {
         "stopRadiusMeters": 30,
         "maxTripAgeDays": 2

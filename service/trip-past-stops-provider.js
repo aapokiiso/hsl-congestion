@@ -1,7 +1,7 @@
 'use strict';
 
 const Sequelize = require('sequelize');
-const initDb = require('../db');
+const db = require('../db');
 
 module.exports = {
     /**
@@ -9,8 +9,6 @@ module.exports = {
      * @returns {Promise<Array<Object>>}
      */
     async getList(tripId) {
-        const db = await initDb();
-
         const tripStopsBeenTo = await db.models.TripStop.findAll({
             attributes: [
                 'stopId',

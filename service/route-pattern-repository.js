@@ -1,18 +1,16 @@
 'use strict';
 
-const initDb = require('../db');
-const hslGraphQL = require('../include/hsl-graphql');
+const db = require('../db');
+const hslGraphQL = require('../hsl-graphql');
 const routeRepository = require('./route-repository');
 const NoSuchEntityError = require('../error/no-such-entity');
 const CouldNotSaveError = require('../error/could-not-save');
 
 module.exports = {
     /**
-     * @returns {Promise<object[]>}
+     * @returns {Promise<Array<object>>}
      */
-    async getList() {
-        const db = await initDb();
-
+    getList() {
         return db.models.RoutePattern.findAll();
     },
     /**
@@ -21,8 +19,6 @@ module.exports = {
      * @throws NoSuchEntityError
      */
     async getById(routePatternId) {
-        const db = await initDb();
-
         const pattern = await db.models.RoutePattern.findByPk(routePatternId);
 
         if (!pattern) {
@@ -85,8 +81,6 @@ async function findRoutePatternDataFromApi(routePatternId) {
 }
 
 async function createRoutePatternToDb(routePatternId, routeId, directionId, headsign) {
-    const db = await initDb();
-
     const [routePattern] = await db.models.RoutePattern.findOrCreate({
         where: {
             id: routePatternId,

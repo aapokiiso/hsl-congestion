@@ -1,6 +1,6 @@
 'use strict';
 
-const initDb = require('../db');
+const db = require('../db');
 const CouldNotSaveError = require('../error/could-not-save');
 
 module.exports = {
@@ -12,8 +12,6 @@ module.exports = {
      * @returns {Promise<object>}
      */
     async recordTripStop(tripId, stopId, seenAtStop, hasDoorsOpen) {
-        const db = await initDb();
-
         try {
             return await db.models.TripStop.create({
                 tripId,

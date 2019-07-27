@@ -18,7 +18,7 @@
         }
     },
     "dependencies": {
-        "bottleneck": "^2.19.4",
+        "@aapokiiso/hsl-congestion-graphql-gateway": "^1.0.2",
         "cors": "^2.8.5",
         "express": "^4.17.1",
         "express-enforces-ssl": "^1.1.0",
@@ -29,8 +29,6 @@
         "mqtt": "^2.18.8",
         "mysql2": "^1.6.5",
         "node-cache": "^4.2.1",
-        "request": "^2.88.0",
-        "request-promise-native": "^1.0.7",
         "sequelize": "^5.10.3"
     },
     "devDependencies": {

@@ -1,7 +1,7 @@
 'use strict';
 
 const moment = require('moment-timezone');
-const hslGraphQL = require('../include/hsl-graphql');
+const hslGraphQL = require('../hsl-graphql');
 const departureTimeLib = require('../include/departure-time');
 const RemoteServiceUnavailableError = require('../error/remote-service-unavailable');
 

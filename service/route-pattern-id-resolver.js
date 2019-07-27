@@ -1,7 +1,7 @@
 'use strict';
 
 const gtfsIdLib = require('../include/gtfs-id');
-const hslGraphQL = require('../include/hsl-graphql');
+const hslGraphQL = require('../hsl-graphql');
 const NotFoundError = require('../error/not-found');
 const RemoteServiceUnavailableError = require('../error/remote-service-unavailable');
 

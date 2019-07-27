@@ -20,14 +20,17 @@ function initConnection() {
             dialectOptions: {
                 socketPath: appConfig.db.socketPath,
             },
-        }
+            sync: {
+                force: appConfig.db.forceSync,
+            },
+        },
     );
 }
 
-async function importModels(sequelize) {
+function importModels(sequelize) {
     const modelsDir = path.resolve(__dirname, 'model');
 
-    const fileNames = await getFileNames(modelsDir);
+    const fileNames = getFileNames(modelsDir);
 
     const models = fileNames
         .filter(fileName => !isHiddenFile(fileName))
@@ -46,15 +49,7 @@ async function importModels(sequelize) {
         });
 
     function getFileNames(dir) {
-        return new Promise(function (resolve, reject) {
-            fs.readdir(dir, (err, fNames) => {
-                if (err) {
-                    return reject(err);
-                }
-
-                return resolve(fNames);
-            });
-        });
+        return fs.readdirSync(dir);
     }
 
     function isHiddenFile(fileName) {
@@ -68,33 +63,13 @@ async function importModels(sequelize) {
     }
 }
 
-async function syncDb(sequelize) {
-    const shouldForceSync = appConfig.db.forceSync;
-
-    if (shouldForceSync) {
-        await sequelize.query('SET FOREIGN_KEY_CHECKS = 0;', { raw: true });
-    }
-
-    await sequelize.sync({ force: shouldForceSync });
-
-    if (shouldForceSync) {
-        await sequelize.query('SET FOREIGN_KEY_CHECKS = 1;', { raw: true });
-    }
-}
-
 let dbInstance;
 
-module.exports = function getDbInstance() {
+module.exports = (function IIFEInitDbInstance() {
     if (!dbInstance) {
-        // Wrap it immediately in a Promise to prevent race conditions.
-        dbInstance = new Promise(async resolve => {
-            const instance = initConnection();
-            await importModels(instance);
-            await syncDb(instance);
-
-            return resolve(instance);
-        });
+        dbInstance = initConnection();
+        importModels(dbInstance);
     }
 
     return dbInstance;
-};
+})();

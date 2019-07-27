@@ -1,22 +1,18 @@
 'use strict';
 
 const Sequelize = require('sequelize');
-const initDb = require('../db');
-const hslGraphQL = require('../include/hsl-graphql');
+const db = require('../db');
+const hslGraphQL = require('../hsl-graphql');
 const NoSuchEntityError = require('../error/no-such-entity');
 const CouldNotSaveError = require('../error/could-not-save');
 
 module.exports = {
     async getList() {
-        const db = await initDb();
-
         const stops = await db.models.Stop.findAll();
 
         return stops;
     },
     async getListByIds(stopIds) {
-        const db = await initDb();
-
         const stops = await db.models.Stop.findAll({
             where: {
                 id: {
@@ -33,8 +29,6 @@ module.exports = {
      * @throws NoSuchEntityError
      */
     async getById(stopId) {
-        const db = await initDb();
-
         const stop = await db.models.Stop.findByPk(stopId);
 
         if (!stop) {
@@ -57,8 +51,6 @@ module.exports = {
         }
     },
     async associateToRoutePattern(stopId, routePatternId) {
-        const db = await initDb();
-
         const [stop, routePattern] = await Promise.all([
             await db.models.Stop.findByPk(stopId),
             await db.models.RoutePattern.findByPk(routePatternId),
@@ -109,8 +101,6 @@ async function createStopToDb(stopId, stopData) {
         lat: latitude,
         lon: longitude,
     } = stopData;
-
-    const db = await initDb();
 
     const [stop] = await db.models.Stop.findOrCreate({
         where: {
