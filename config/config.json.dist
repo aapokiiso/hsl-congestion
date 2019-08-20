@@ -24,9 +24,5 @@
             "/hfp/v2/journey/ongoing/doo/tram/#",
             "/hfp/v2/journey/ongoing/doc/tram/#"
         ]
-    },
-    "hsl": {
-        "stopRadiusMeters": 30,
-        "maxTripAgeDays": 2
     }
 }
