@@ -21,7 +21,8 @@
         "host": "mqtt.hsl.fi",
         "port": 1883,
         "topics": [
-            "/hfp/v1/journey/ongoing/tram/#"
+            "/hfp/v2/journey/ongoing/doo/tram/#",
+            "/hfp/v2/journey/ongoing/doc/tram/#"
         ]
     },
     "hsl": {

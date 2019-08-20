@@ -8,9 +8,9 @@
         "lint": "npm run lint:js",
         "lint:js": "eslint .",
         "lint:js:fix": "eslint --fix .",
-        "track-stop-times": "node ./script/track-stop-times",
         "dev": "nodemon --exec npm start",
-        "start": "node ./index"
+        "start": "node ./index",
+        "logger": "node ./bin/logger"
     },
     "husky": {
         "hooks": {
