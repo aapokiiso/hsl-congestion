@@ -69,6 +69,7 @@ module.exports = (function IIFEInitDbInstance() {
     if (!dbInstance) {
         dbInstance = initConnection();
         importModels(dbInstance);
+        dbInstance.sync();
     }
 
     return dbInstance;
