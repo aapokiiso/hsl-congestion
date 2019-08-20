@@ -1,7 +1,7 @@
 'use strict';
 
 const tripPastStopsProvider = require('./trip-past-stops-provider');
-const stopLoadDurationProvider = require('./stop-load-duration-provider');
+const loadDurationProvider = require('./load-duration-provider');
 const tripRepository = require('./trip-repository');
 const InvalidStateError = require('../error/invalid-state');
 const NoSuchEntityError = require('../error/no-such-entity');
@@ -15,16 +15,16 @@ module.exports = {
      * @throws InvalidStateError - if no weighted average load duration available
      */
     async getCongestionRate(tripId) {
-        const stopLoadDurations = await getStopLoadDurations(tripId);
+        const loadDurations = await getLoadDurations(tripId);
 
-        const weightedLoadDuration = stopLoadDurations
+        const weightedLoadDuration = loadDurations
             .reduce((acc, loadDurations, idx, arr) => {
                 const [tripLoadDurationForStop] = loadDurations;
 
                 return acc + tripLoadDurationForStop * getLoadDurationWeight(idx, arr);
             }, 0);
 
-        const weightedAverageLoadDuration = stopLoadDurations
+        const weightedAverageLoadDuration = loadDurations
             .reduce((acc, loadDurations, idx, arr) => {
                 const [, averageLoadDurationForStop] = loadDurations;
 
@@ -48,7 +48,7 @@ module.exports = {
  * @param {String} tripId
  * @returns {Array<Array<Number, Number>>}
  */
-async function getStopLoadDurations(tripId) {
+async function getLoadDurations(tripId) {
     try {
         const [trip, stopsBeenTo] = await Promise.all([
             tripRepository.getById(tripId),
@@ -57,8 +57,8 @@ async function getStopLoadDurations(tripId) {
 
         return await Promise.all(
             stopsBeenTo.map(stop => Promise.all([
-                stopLoadDurationProvider.getByTrip(stop.id, tripId),
-                stopLoadDurationProvider.getAverageByRoutePattern(stop.id, trip.routePatternId),
+                loadDurationProvider.getByTrip(stop.id, tripId),
+                loadDurationProvider.getAverageByRoutePattern(stop.id, trip.routePatternId),
             ]))
         );
     } catch (e) {

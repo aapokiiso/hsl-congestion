@@ -34,9 +34,9 @@ services:
             PORT: 80
         ports:
             - 80
-    track_stop_times:
+    logger:
         image: node:10
-        command: npm run track-stop-times
+        command: npm run logger
         working_dir: /usr/app
         volumes: *appvolumes
         networks:
