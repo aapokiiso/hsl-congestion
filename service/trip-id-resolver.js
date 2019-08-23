@@ -1,6 +1,6 @@
 'use strict';
 
-const gtfsIdLib = require('../include/gtfs-id');
+const hslUtils = require('@aapokiiso/hsl-congestion-utils');
 const hslGraphQL = require('../hsl-graphql');
 const NotFoundError = require('../error/not-found');
 const RemoteServiceUnavailableError = require('../error/remote-service-unavailable');
@@ -16,7 +16,7 @@ module.exports = {
      * @throws RemoteServiceUnavailableError
      */
     async findIdByDeparture(routeId, directionId, departureDate, departureTimeSeconds) {
-        const routeGtfsId = gtfsIdLib.convertRealtimeApiForRoutingApi(routeId);
+        const routeGtfsId = hslUtils.gtfsId.convertRealtimeApiForRoutingApi(routeId);
 
         try {
             return await searchTripIdFromApi(
