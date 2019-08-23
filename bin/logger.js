@@ -9,10 +9,8 @@
 
 const mqtt = require('mqtt');
 const moment = require('moment-timezone');
+const hslUtils = require('@aapokiiso/hsl-congestion-utils');
 const appConfig = require('../config');
-const directionIdLib = require('../include/direction-id');
-const departureTimeLib = require('../include/departure-time');
-const nextStopIdLib = require('../include/next-stop-id');
 const routePatternIdResolver = require('../service/route-pattern-id-resolver');
 const routePatternRepository = require('../service/route-pattern-repository');
 const stopRepository = require('../service/stop-repository');
@@ -25,7 +23,7 @@ const mqttClient = initMqtt(appConfig.mqtt.topics);
 mqttClient.on('message', async (topic, message) => {
     const { eventType, routeId, nextStopId } = parseTopic(topic);
 
-    if (nextStopIdLib.isEndOfLine(nextStopId)) {
+    if (hslUtils.nextStopId.isEndOfLine(nextStopId)) {
         return;
     }
 
@@ -121,10 +119,10 @@ function findRoutePatternId(routeId, {
     oday: departureDate,
     start: departureTime,
 }) {
-    const directionId = directionIdLib.convertRealtimeApiForRoutingApi(realtimeApiDirectionId);
-    const departureTimeSeconds = departureTimeLib.convertToSeconds(
+    const directionId = hslUtils.directionId.convertRealtimeApiForRoutingApi(realtimeApiDirectionId);
+    const departureTimeSeconds = hslUtils.departureTime.convertToSeconds(
         departureTime,
-        departureTimeLib.shouldRollOverToNextDay(departureDate, seenAtStop)
+        hslUtils.departureTime.shouldRollOverToNextDay(departureDate, seenAtStop)
     );
 
     return routePatternIdResolver.findIdByDeparture(routeId, directionId, departureDate, departureTimeSeconds);
@@ -139,7 +137,7 @@ async function getOrCreateRoutePatternById(routePatternId) {
 }
 
 async function getOrCreateStopById(realtimeApiStopId) {
-    const stopId = nextStopIdLib.convertRealtimeApiForRoutingApi(realtimeApiStopId);
+    const stopId = hslUtils.nextStopId.convertRealtimeApiForRoutingApi(realtimeApiStopId);
 
     try {
         return await stopRepository.getById(stopId);
@@ -154,10 +152,10 @@ function findTripId(routeId, {
     oday: departureDate,
     start: departureTime,
 }) {
-    const directionId = directionIdLib.convertRealtimeApiForRoutingApi(realtimeApiDirectionId);
-    const departureTimeSeconds = departureTimeLib.convertToSeconds(
+    const directionId = hslUtils.directionId.convertRealtimeApiForRoutingApi(realtimeApiDirectionId);
+    const departureTimeSeconds = hslUtils.departureTime.convertToSeconds(
         departureTime,
-        departureTimeLib.shouldRollOverToNextDay(departureDate, seenAtStop)
+        hslUtils.departureTime.shouldRollOverToNextDay(departureDate, seenAtStop)
     );
 
     return tripIdResolver.findIdByDeparture(routeId, directionId, departureDate, departureTimeSeconds);

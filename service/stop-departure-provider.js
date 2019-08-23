@@ -2,7 +2,7 @@
 
 const moment = require('moment-timezone');
 const hslGraphQL = require('../hsl-graphql');
-const departureTimeLib = require('../include/departure-time');
+const hslUtils = require('@aapokiiso/hsl-congestion-utils');
 const RemoteServiceUnavailableError = require('../error/remote-service-unavailable');
 
 module.exports = {
@@ -51,9 +51,9 @@ async function searchDeparturesFromApi(stopId) {
 }
 
 function convertSecondsToDepartureDate(departureTimeSeconds) {
-    const departureDate = departureTimeLib.hasRolledOverToNextDay(departureTimeSeconds)
+    const departureDate = hslUtils.departureTime.hasRolledOverToNextDay(departureTimeSeconds)
         ? moment().subtract(1, 'days')
         : moment();
 
-    return departureTimeLib.convertToDate(departureDate, departureTimeSeconds);
+    return hslUtils.departureTime.convertToDate(departureDate, departureTimeSeconds);
 }

@@ -19,6 +19,7 @@
     },
     "dependencies": {
         "@aapokiiso/hsl-congestion-graphql-gateway": "^1.0.2",
+        "@aapokiiso/hsl-congestion-utils": "^1.0.0",
         "cors": "^2.8.5",
         "express": "^4.17.1",
         "express-enforces-ssl": "^1.1.0",
