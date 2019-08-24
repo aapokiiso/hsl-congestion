@@ -1,7 +1,7 @@
 'use strict';
 
 const hslGraphQL = require('@aapokiiso/hsl-congestion-graphql-gateway');
-const db = require('../db');
+const {db} = require('@aapokiiso/hsl-congestion-db-schema');
 const NoSuchEntityError = require('../error/no-such-entity');
 const CouldNotSaveError = require('../error/could-not-save');
 
@@ -12,7 +12,7 @@ module.exports = {
      * @throws NoSuchEntityError
      */
     async getById(tripId) {
-        const trip = await db.models.Trip.findByPk(tripId);
+        const trip = await db().models.Trip.findByPk(tripId);
 
         if (!trip) {
             throw new NoSuchEntityError(
@@ -66,7 +66,7 @@ async function createTripToDb(tripId, tripData) {
         code: routePatternId,
     } = routePatternData;
 
-    const [trip] = await db.models.Trip.findOrCreate({
+    const [trip] = await db().models.Trip.findOrCreate({
         where: {
             id: tripId,
             routePatternId,

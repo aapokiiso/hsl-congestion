@@ -17,8 +17,10 @@
         }
     },
     "dependencies": {
-        "@aapokiiso/hsl-congestion-db-schema": "^1.0.0",
+        "@aapokiiso/hsl-congestion-db-schema": "^2.0.1",
         "@aapokiiso/hsl-congestion-graphql-gateway": "^2.0.1",
+        "@aapokiiso/hsl-congestion-route-repository": "^1.0.1",
+        "@aapokiiso/hsl-congestion-stop-repository": "^1.0.1",
         "@aapokiiso/hsl-congestion-utils": "^1.0.1",
         "cors": "^2.8.5",
         "express": "^4.17.1",

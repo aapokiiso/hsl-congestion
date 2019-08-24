@@ -1,8 +1,8 @@
 'use strict';
 
 const hslGraphQL = require('@aapokiiso/hsl-congestion-graphql-gateway');
-const db = require('../db');
-const routeRepository = require('./route-repository');
+const {db} = require('@aapokiiso/hsl-congestion-db-schema');
+const routeRepository = require('@aapokiiso/hsl-congestion-route-repository');
 const NoSuchEntityError = require('../error/no-such-entity');
 const CouldNotSaveError = require('../error/could-not-save');
 
@@ -11,7 +11,7 @@ module.exports = {
      * @returns {Promise<Array<object>>}
      */
     getList() {
-        return db.models.RoutePattern.findAll();
+        return db().models.RoutePattern.findAll();
     },
     /**
      * @param {string} routePatternId
@@ -19,7 +19,7 @@ module.exports = {
      * @throws NoSuchEntityError
      */
     async getById(routePatternId) {
-        const pattern = await db.models.RoutePattern.findByPk(routePatternId);
+        const pattern = await db().models.RoutePattern.findByPk(routePatternId);
 
         if (!pattern) {
             throw new NoSuchEntityError(
@@ -81,7 +81,7 @@ async function findRoutePatternDataFromApi(routePatternId) {
 }
 
 async function createRoutePatternToDb(routePatternId, routeId, directionId, headsign) {
-    const [routePattern] = await db.models.RoutePattern.findOrCreate({
+    const [routePattern] = await db().models.RoutePattern.findOrCreate({
         where: {
             id: routePatternId,
             routeId,

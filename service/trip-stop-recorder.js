@@ -1,6 +1,6 @@
 'use strict';
 
-const db = require('../db');
+const {db} = require('@aapokiiso/hsl-congestion-db-schema');
 const CouldNotSaveError = require('../error/could-not-save');
 
 module.exports = {
@@ -13,7 +13,7 @@ module.exports = {
      */
     async recordTripStop(tripId, stopId, seenAtStop, hasDoorsOpen) {
         try {
-            return await db.models.TripStop.create({
+            return await db().models.TripStop.create({
                 tripId,
                 stopId,
                 seenAtStop,
