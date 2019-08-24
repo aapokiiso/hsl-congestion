@@ -1,6 +1,6 @@
 'use strict';
 
-const ENV_DEFAULT = 'local';
+const ENV_DEFAULT = 'development';
 const ENV_PRODUCTION = 'production';
 
 const envName = process.env.NODE_ENV || ENV_DEFAULT;
@@ -28,11 +28,7 @@ moment.tz.setDefault(envJson.timezone);
  * @property {String} mqtt.host
  * @property {number} mqtt.port
  * @property {Array<String>} mqtt.topics
- * @property {String} graphql.url
  * @property {String} env
- * @property {Number} hsl.stopRadiusMeters - Radius for what is registered for a
- *                                           trip (eg. vehicle) visiting a stop.
- * @property {Number} hsl.maxTripAgeDays - How long to persist trips in db
  * @property {Function} isProduction
  */
 module.exports = Object.assign({}, envJson, {

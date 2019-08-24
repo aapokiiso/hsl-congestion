@@ -2,7 +2,6 @@
 
 const moment = require('moment-timezone');
 const db = require('../db');
-const filterUnique = require('../include/filter-unique');
 
 module.exports = {
     async getByTrip(stopId, tripId) {
@@ -176,4 +175,15 @@ function getTimestampsLogByRoutePattern(stopId, routePatternId) {
             ['seenAtStop', 'ASC'],
         ],
     });
+}
+
+/**
+ * Remove duplicates from array
+ * @param {*} val
+ * @param {number} idx
+ * @param {Array} arr
+ * @returns {boolean}
+ */
+function filterUnique(val, idx, arr) {
+    return arr.indexOf(val) === idx;
 }
