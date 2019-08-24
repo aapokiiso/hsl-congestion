@@ -1,7 +1,7 @@
 'use strict';
 
 const moment = require('moment-timezone');
-const {db} = require('@aapokiiso/hsl-congestion-db-schema');
+const { db } = require('@aapokiiso/hsl-congestion-db-schema');
 
 module.exports = {
     async getByTrip(stopId, tripId) {

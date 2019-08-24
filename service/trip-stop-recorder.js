@@ -1,6 +1,6 @@
 'use strict';
 
-const {db} = require('@aapokiiso/hsl-congestion-db-schema');
+const { db } = require('@aapokiiso/hsl-congestion-db-schema');
 const CouldNotSaveError = require('../error/could-not-save');
 
 module.exports = {

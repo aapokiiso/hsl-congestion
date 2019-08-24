@@ -1,7 +1,7 @@
 'use strict';
 
 const hslGraphQL = require('@aapokiiso/hsl-congestion-graphql-gateway');
-const {db} = require('@aapokiiso/hsl-congestion-db-schema');
+const { db } = require('@aapokiiso/hsl-congestion-db-schema');
 const routeRepository = require('@aapokiiso/hsl-congestion-route-repository');
 const NoSuchEntityError = require('../error/no-such-entity');
 const CouldNotSaveError = require('../error/could-not-save');

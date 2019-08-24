@@ -1,7 +1,7 @@
 'use strict';
 
 const Sequelize = require('sequelize');
-const {db} = require('@aapokiiso/hsl-congestion-db-schema');
+const { db } = require('@aapokiiso/hsl-congestion-db-schema');
 
 module.exports = {
     /**
