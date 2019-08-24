@@ -1,8 +1,8 @@
 'use strict';
 
 const Sequelize = require('sequelize');
+const hslGraphQL = require('@aapokiiso/hsl-congestion-graphql-gateway');
 const db = require('../db');
-const hslGraphQL = require('../hsl-graphql');
 const NoSuchEntityError = require('../error/no-such-entity');
 const CouldNotSaveError = require('../error/could-not-save');
 
