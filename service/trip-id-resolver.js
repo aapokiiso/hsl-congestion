@@ -1,7 +1,7 @@
 'use strict';
 
 const hslUtils = require('@aapokiiso/hsl-congestion-utils');
-const hslGraphQL = require('../hsl-graphql');
+const hslGraphQL = require('@aapokiiso/hsl-congestion-graphql-gateway');
 const NotFoundError = require('../error/not-found');
 const RemoteServiceUnavailableError = require('../error/remote-service-unavailable');
 
