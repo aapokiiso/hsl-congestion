@@ -17,7 +17,8 @@
         }
     },
     "dependencies": {
-        "@aapokiiso/hsl-congestion-graphql-gateway": "^1.0.2",
+        "@aapokiiso/hsl-congestion-db-schema": "^1.0.0",
+        "@aapokiiso/hsl-congestion-graphql-gateway": "^1.0.3",
         "@aapokiiso/hsl-congestion-utils": "^1.0.1",
         "cors": "^2.8.5",
         "express": "^4.17.1",
@@ -29,7 +30,7 @@
         "mqtt": "^2.18.8",
         "mysql2": "^1.6.5",
         "node-cache": "^4.2.1",
-        "sequelize": "^5.10.3"
+        "sequelize": "^5.16.0"
     },
     "devDependencies": {
         "@babel/core": "^7.5.5",
