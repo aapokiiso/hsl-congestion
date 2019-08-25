@@ -2,7 +2,7 @@
 
 const NodeCache = require('node-cache');
 const statusCodes = require('http-status-codes');
-const routePatternRepository = require('../service/route-pattern-repository');
+const routePatternRepository = require('@aapokiiso/hsl-congestion-route-pattern-repository');
 
 const patternsCache = new NodeCache({ stdTTL: 3600, checkperiod: 0 });
 const router = require('express').Router(); // eslint-disable-line new-cap

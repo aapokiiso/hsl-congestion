@@ -3,7 +3,7 @@
 const moment = require('moment-timezone');
 const hslGraphQL = require('@aapokiiso/hsl-congestion-graphql-gateway');
 const hslUtils = require('@aapokiiso/hsl-congestion-utils');
-const RemoteServiceUnavailableError = require('../error/remote-service-unavailable');
+const RemoteServiceUnavailableError = require('../error/remote-service-unavailable-error');
 
 module.exports = {
     /**

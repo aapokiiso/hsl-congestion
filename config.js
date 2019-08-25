@@ -25,9 +25,6 @@ moment.tz.setDefault(envJson.timezone);
  * @property {String} ssl.key - SSL private key
  * @property {String} ssl.cert - SSL certificate
  * @property {String} ssl.ca - SSL certificate authority
- * @property {String} mqtt.host
- * @property {number} mqtt.port
- * @property {Array<String>} mqtt.topics
  * @property {String} env
  * @property {Function} isProduction
  */
