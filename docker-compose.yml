@@ -24,7 +24,7 @@ services:
         image: node:10
         command: npm run dev
         working_dir: /usr/app
-        volumes: &appvolumes
+        volumes:
             - .:/usr/app
         networks:
             - default
@@ -34,15 +34,6 @@ services:
             PORT: 80
         ports:
             - 80
-    logger:
-        image: node:10
-        command: npm run logger
-        working_dir: /usr/app
-        volumes: *appvolumes
-        networks:
-            - default
-        depends_on:
-            - database
 networks:
     default:
     phpmyadmin:

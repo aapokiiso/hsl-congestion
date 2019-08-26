@@ -1,10 +1,10 @@
 'use strict';
 
+const tripRepository = require('@aapokiiso/hsl-congestion-trip-repository');
+const NoSuchTripError = require('@aapokiiso/hsl-congestion-trip-repository/src/no-such-trip-error');
 const tripPastStopsProvider = require('./trip-past-stops-provider');
 const loadDurationProvider = require('./load-duration-provider');
-const tripRepository = require('./trip-repository');
-const InvalidStateError = require('../error/invalid-state');
-const NoSuchEntityError = require('../error/no-such-entity');
+const RoutePatternAverageDurationNotFoundError = require('../error/route-pattern-average-duration-not-found-error');
 
 module.exports = {
     /**
@@ -12,7 +12,7 @@ module.exports = {
      *
      * @param {String} tripId
      * @returns {Promise<number>}
-     * @throws InvalidStateError - if no weighted average load duration available
+     * @throws RoutePatternAverageDurationNotFoundError
      */
     async getCongestionRate(tripId) {
         const loadDurations = await getLoadDurations(tripId);
@@ -32,7 +32,7 @@ module.exports = {
             }, 0);
 
         if (!weightedAverageLoadDuration) {
-            throw new InvalidStateError(
+            throw new RoutePatternAverageDurationNotFoundError(
                 'Weighted average load duration for the trip doesn\'t exist, so the congestion rate cannot be calculated.'
             );
         }
@@ -62,8 +62,8 @@ async function getLoadDurations(tripId) {
             ]))
         );
     } catch (e) {
-        // NoSuchEntityError is thrown if trip isn't yet recorded, which is ok.
-        if (!(e instanceof NoSuchEntityError)) {
+        // NoSuchTripError is thrown if trip isn't yet recorded, which is ok.
+        if (!(e instanceof NoSuchTripError)) {
             console.error(e);
         }
 

@@ -1,7 +1,7 @@
 'use strict';
 
 const moment = require('moment-timezone');
-const db = require('../db');
+const { db } = require('@aapokiiso/hsl-congestion-db-schema');
 
 module.exports = {
     async getByTrip(stopId, tripId) {
@@ -138,7 +138,7 @@ function sumDoorStatusDurationsReducer(totalDurationInSeconds, doorStatusDuratio
 }
 
 function getTimestampsLogByTrip(stopId, tripId) {
-    return db.models.TripStop.findAll({
+    return db().models.TripStop.findAll({
         where: {
             stopId,
             tripId,
@@ -150,15 +150,15 @@ function getTimestampsLogByTrip(stopId, tripId) {
 }
 
 function getTimestampsLogByRoutePattern(stopId, routePatternId) {
-    return db.models.TripStop.findAll({
+    return db().models.TripStop.findAll({
         include: [
             {
-                model: db.models.Trip,
+                model: db().models.Trip,
                 as: 'trip',
                 required: true,
                 include: [
                     {
-                        model: db.models.RoutePattern,
+                        model: db().models.RoutePattern,
                         as: 'routePattern',
                         required: true,
                         where: {

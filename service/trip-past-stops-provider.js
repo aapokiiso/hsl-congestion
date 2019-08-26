@@ -1,7 +1,7 @@
 'use strict';
 
 const Sequelize = require('sequelize');
-const db = require('../db');
+const { db } = require('@aapokiiso/hsl-congestion-db-schema');
 
 module.exports = {
     /**
@@ -9,7 +9,7 @@ module.exports = {
      * @returns {Promise<Array<Object>>}
      */
     async getList(tripId) {
-        const tripStopsBeenTo = await db.models.TripStop.findAll({
+        const tripStopsBeenTo = await db().models.TripStop.findAll({
             attributes: [
                 'stopId',
                 [Sequelize.fn('MAX', Sequelize.col('seenAtStop')), 'lastSeenAtStop'],
@@ -25,7 +25,7 @@ module.exports = {
 
         const stopIdsBeenTo = tripStopsBeenTo.map(tripStop => tripStop.stopId);
 
-        const stops = await db.models.Stop.findAll({
+        const stops = await db().models.Stop.findAll({
             where: {
                 id: {
                     [Sequelize.Op.in]: stopIdsBeenTo,

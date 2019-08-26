@@ -7,6 +7,7 @@ const helmet = {
     hsts: require('hsts'),
 };
 const cors = require('cors');
+const db = require('@aapokiiso/hsl-congestion-db-schema');
 
 const appConfig = require('./config');
 
@@ -36,4 +37,8 @@ api.use('/', require('./endpoint/departures'));
 api.use('/', require('./endpoint/route-patterns'));
 api.use('/', require('./endpoint/stops'));
 
-server.listen(process.env.PORT);
+(async function initDbAndStartServer() {
+    await db.init(appConfig.db);
+
+    server.listen(process.env.PORT);
+})();
