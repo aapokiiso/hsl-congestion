@@ -33,9 +33,7 @@ if (appConfig.ssl.enabled) {
     api.use(enforceSSL());
 }
 
-api.use('/', require('./endpoint/departures'));
-api.use('/', require('./endpoint/route-patterns'));
-api.use('/', require('./endpoint/stops'));
+api.use('/', require('./endpoint/congestion-rates'));
 
 (async function initDbAndStartServer() {
     await db.init(appConfig.db);

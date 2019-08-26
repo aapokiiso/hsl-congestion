@@ -8,7 +8,16 @@ const RoutePatternAverageDurationNotFoundError = require('../error/route-pattern
 
 module.exports = {
     /**
-     * Returns a live congestion rate (0 to 1) for a trip.
+     * Calculates a live congestion rate (0 to 1 to n) for a trip.
+     *
+     * For example:
+     * 0 = no congestion (most likely tram is at terminus)
+     * 0.5 = half of average congestion
+     * 1 = average congestion
+     * 2 = double the average congestion
+     * etc.
+     *
+     * There is no upper limit for the congestion rate.
      *
      * @param {String} tripId
      * @returns {Promise<number>}

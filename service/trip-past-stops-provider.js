@@ -5,6 +5,9 @@ const { db } = require('@aapokiiso/hsl-congestion-db-schema');
 
 module.exports = {
     /**
+     * Looks up a list of stops the trip has been recorded as having passed.
+     * Returned stops are ordered in chronological ascending order.
+     *
      * @param {String} tripId
      * @returns {Promise<Array<Object>>}
      */
