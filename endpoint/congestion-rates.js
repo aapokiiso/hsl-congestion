@@ -15,10 +15,10 @@ router.get('/trips/:tripId/congestionRate', async function (req, res) {
     const { tripId } = req.params;
 
     try {
-        const departures = congestionRatesCache.get(tripId)
+        const congestionRate = congestionRatesCache.get(tripId)
             || await getTripCongestionRate(tripId);
 
-        res.status(statusCodes.OK).json(departures);
+        res.status(statusCodes.OK).json(congestionRate);
     } catch (e) {
         console.error(e);
         res.status(statusCodes.INTERNAL_SERVER_ERROR).json({});
