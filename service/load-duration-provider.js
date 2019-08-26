@@ -1,9 +1,22 @@
 'use strict';
 
 const moment = require('moment-timezone');
+const NodeCache = require('node-cache');
 const { db } = require('@aapokiiso/hsl-congestion-db-schema');
 
+const averageLoadDurationsCache = new NodeCache({
+    stdTTL: 86400, // Cache averages for one day
+    checkperiod: 0,
+});
+
 module.exports = {
+    /**
+     * Calculates realised passenger load time for a trip at a given stop.
+     *
+     * @param {string} stopId
+     * @param {string} tripId
+     * @returns {Promise<number>} Passenger load time in seconds
+     */
     async getByTrip(stopId, tripId) {
         const timestampsLog = await getTimestampsLogByTrip(stopId, tripId);
 
@@ -16,7 +29,22 @@ module.exports = {
 
         return 0;
     },
+    /**
+     * Calculates average realised passenger load time for a route pattern
+     * at a given stop. Used for comparing to live trip passenger load times.
+     *
+     * @param {string} stopId
+     * @param {string} routePatternId
+     * @returns {Promise<number>} Average passenger load time in seconds
+     */
     async getAverageByRoutePattern(stopId, routePatternId) {
+        const cacheKey = [stopId, routePatternId].join();
+
+        const cachedAverage = averageLoadDurationsCache.get(cacheKey);
+        if (cachedAverage) {
+            return cachedAverage;
+        }
+
         const timestampsLog = await getTimestampsLogByRoutePattern(stopId, routePatternId);
 
         if (timestampsLog.length) {
@@ -26,7 +54,11 @@ module.exports = {
                 .filter(filterUnique)
                 .length;
 
-            return tripsTotalLoadDuration / tripsCount;
+            const averageLoadDuration = tripsTotalLoadDuration / tripsCount;
+
+            averageLoadDurationsCache.set(cacheKey, averageLoadDuration);
+
+            return averageLoadDuration;
         }
 
         // No trams have been recorded on the route pattern yet.
@@ -35,6 +67,14 @@ module.exports = {
     },
 };
 
+/**
+ * Sums the passenger load time for a given set of trip stop timestamps.
+ * Trip stop timestamps are being continuously logged by
+ * a @aapokiiso/hsl-congestion-recorder service.
+ *
+ * @param {Array<Object>} timestampsLog
+ * @returns {number} Passenger load time in seconds
+ */
 function sumLoadDurationFromTimestampsLog(timestampsLog) {
     return timestampsLog
         .filter(removeAdjacentDuplicateTimestampsFilter)
@@ -58,8 +98,8 @@ function removeAdjacentDuplicateTimestampsFilter(timestamp, idx, timestamps) {
 }
 
 /**
- * Pair open-doored timestamp to closed-doored timestamp (and vice versa),
- * so time difference between them can be measured.
+ * Pair adjacent open-doored timestamp to closed-doored timestamp (and vice versa),
+ * so that the time difference between them can be measured.
  *
  * @param {Array<Object>} timestampGroups
  * @param {Object} currentTimestamp
@@ -96,8 +136,8 @@ function groupTimestampsByDoorStatusIntervalReducer(timestampGroups, currentTime
 }
 
 /**
- * Remove closed-door timestamp groups,
- * we only care how long the doors are open
+ * Remove closed-door timestamp groups.
+ * We only care how long the doors are open,
  * since that's what affects congestion.
  *
  * @param {Object} timestampPair
@@ -108,7 +148,9 @@ function removeClosedDoorTimestampGroupsFilter(timestampPair) {
 }
 
 /**
- * Get time diff between group of timestamps.
+ * Get time diff inside group of timestamps. As the timestamps are grouped
+ * by door status, each group spans the duration of one doors-open period
+ * or one doors-closed period.
  *
  * @param {Object} timestampGroup
  * @returns {{durationInSeconds: number, doorsOpen: boolean}} Door status with duration
@@ -137,6 +179,13 @@ function sumDoorStatusDurationsReducer(totalDurationInSeconds, doorStatusDuratio
     return totalDurationInSeconds + doorStatusDuration.durationInSeconds;
 }
 
+/**
+ * Looks up trip stop timestamps for a given trip.
+ *
+ * @param {string} stopId
+ * @param {string} tripId
+ * @returns {Promise<Array<Object>>}
+ */
 function getTimestampsLogByTrip(stopId, tripId) {
     return db().models.TripStop.findAll({
         where: {
@@ -149,6 +198,14 @@ function getTimestampsLogByTrip(stopId, tripId) {
     });
 }
 
+/**
+ * Looks up all trip stop timestamps gathered for a route pattern.
+ * This is a very large set of timestamps!
+ *
+ * @param {string} stopId
+ * @param {string} routePatternId
+ * @returns {Promise<Array<Object>>}
+ */
 function getTimestampsLogByRoutePattern(stopId, routePatternId) {
     return db().models.TripStop.findAll({
         include: [
@@ -178,7 +235,8 @@ function getTimestampsLogByRoutePattern(stopId, routePatternId) {
 }
 
 /**
- * Remove duplicates from array
+ * Removes duplicates from array
+ *
  * @param {*} val
  * @param {number} idx
  * @param {Array} arr
