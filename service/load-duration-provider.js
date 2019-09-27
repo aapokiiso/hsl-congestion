@@ -49,10 +49,10 @@ module.exports = {
 
         if (timestampsLog.length) {
             const tripsTotalLoadDuration = sumLoadDurationFromTimestampsLog(timestampsLog);
-            const tripsCount = timestampsLog
-                .map(timestamp => timestamp.tripId)
-                .filter(filterUnique)
-                .length;
+
+            const tripIds = timestampsLog.map(timestamp => timestamp.tripId);
+            const uniqueTripIds = filterUnique(tripIds);
+            const tripsCount = uniqueTripIds.length;
 
             const averageLoadDuration = tripsTotalLoadDuration / tripsCount;
 
@@ -188,6 +188,7 @@ function sumDoorStatusDurationsReducer(totalDurationInSeconds, doorStatusDuratio
  */
 function getTimestampsLogByTrip(stopId, tripId) {
     return db().models.TripStop.findAll({
+        attributes: ['tripId', 'doorsOpen', 'seenAtStop'],
         where: {
             stopId,
             tripId,
@@ -208,16 +209,19 @@ function getTimestampsLogByTrip(stopId, tripId) {
  */
 function getTimestampsLogByRoutePattern(stopId, routePatternId) {
     return db().models.TripStop.findAll({
+        attributes: ['tripId', 'doorsOpen', 'seenAtStop'],
         include: [
             {
                 model: db().models.Trip,
                 as: 'trip',
                 required: true,
+                attributes: [],
                 include: [
                     {
                         model: db().models.RoutePattern,
                         as: 'routePattern',
                         required: true,
+                        attributes: [],
                         where: {
                             id: routePatternId,
                         },
@@ -237,11 +241,11 @@ function getTimestampsLogByRoutePattern(stopId, routePatternId) {
 /**
  * Removes duplicates from array
  *
- * @param {*} val
- * @param {number} idx
  * @param {Array} arr
- * @returns {boolean}
+ * @returns {Array}
  */
-function filterUnique(val, idx, arr) {
-    return arr.indexOf(val) === idx;
+function filterUnique(arr) {
+    // Typicaly Array#filter with unique indexOf check is O(n^2),
+    // use this Set hack instead to filter out duplicates.
+    return [...new Set(arr)];
 }
