@@ -60,3 +60,12 @@ based on all previous trips on the route. This results in a nice ratio, where:
     
     The returned number, ~0.52, ie. half of normal congestion,
     is the live congestion rate for the specified trip!
+
+## Contributing
+
+1. Clone this repository to your local machine.
+2. Run `npm install`
+3. Configure the database (and optionally SSL) settings into `config/[NODE_ENV].json`.
+   The default `NODE_ENV` is `development`, so you should create a `config/development.json`.
+3. Start the development server with `PORT=3000 npm run dev`. If you want to 
+   run it in a different port number you can change the `PORT` argument freely.
