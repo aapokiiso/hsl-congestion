@@ -48,7 +48,7 @@ module.exports = {
             return cachedAverage;
         }
 
-        const timestampsLog = await getTimestampsLogByRoutePattern(stopId, routePatternId, timestamp);
+        const timestampsLog = await getTimestampsLogForRoutePatternAverage(stopId, routePatternId, timestamp);
 
         if (timestampsLog.length) {
             const tripsTotalLoadDuration = sumLoadDurationFromTimestampsLog(timestampsLog);
@@ -210,12 +210,11 @@ function getTimestampsLogByTrip(stopId, tripId, timestamp) {
             ['seenAtStop', 'ASC'],
         ],
     });
-
 }
 
 /**
- * Looks up all trip stop timestamps gathered for a route pattern.
- * This is a very large set of timestamps!
+ * Looks up all trip stop timestamps gathered for a route pattern
+ * from the last day. An average load duration is calculated based on this.
  *
  * @param {string} stopId
  * @param {string} routePatternId
@@ -223,9 +222,15 @@ function getTimestampsLogByTrip(stopId, tripId, timestamp) {
  *     only those that happened before this point in time
  * @returns {Promise<Array<Object>>}
  */
-function getTimestampsLogByRoutePattern(stopId, routePatternId, timestamp) {
+function getTimestampsLogForRoutePatternAverage(stopId, routePatternId, timestamp) {
+    const now = new Date();
+    const yesterday = (new Date()).setDate(now.getDate() - 1);
+
     const whereCondition = {
         stopId,
+        seenAtStop: {
+            [Sequelize.Op.gt]: yesterday,
+        },
     };
 
     if (timestamp) {
