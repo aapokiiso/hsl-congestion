@@ -13,22 +13,27 @@ const router = require('express').Router(); // eslint-disable-line new-cap
 
 router.get('/trips/:tripId/congestionRate', async function (req, res) {
     const { tripId } = req.params;
+    const { timestamp: timestampStr } = req.query;
+
+    const timestamp = timestampStr ? new Date(timestampStr) : null;
 
     try {
-        const congestionRate = congestionRatesCache.get(tripId)
-            || await getTripCongestionRate(tripId);
+        const congestionRate = congestionRatesCache.get([tripId, timestamp].join(''))
+            || await getTripCongestionRate(tripId, timestamp);
 
         res.status(statusCodes.OK).json(congestionRate);
     } catch (e) {
         console.error(e);
         res.status(statusCodes.INTERNAL_SERVER_ERROR).json({});
     }
+
+
 });
 
-async function getTripCongestionRate(tripId) {
+async function getTripCongestionRate(tripId, timestamp) {
     let congestionRate;
     try {
-        congestionRate = await tripCongestionRateProvider.getCongestionRate(tripId);
+        congestionRate = await tripCongestionRateProvider.getCongestionRate(tripId, timestamp);
     } catch (e) {
         console.error(e);
 
@@ -36,9 +41,11 @@ async function getTripCongestionRate(tripId) {
         congestionRate = null;
     }
 
-    congestionRatesCache.set(tripId, congestionRate);
+    congestionRatesCache.set([tripId, timestamp].join(''), congestionRate);
+
 
     return congestionRate;
+
 }
 
 module.exports = router;

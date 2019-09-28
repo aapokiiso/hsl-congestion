@@ -3,6 +3,7 @@
 const moment = require('moment-timezone');
 const NodeCache = require('node-cache');
 const { db } = require('@aapokiiso/hsl-congestion-db-schema');
+const Sequelize = require('sequelize');
 
 const averageLoadDurationsCache = new NodeCache({
     stdTTL: 86400, // Cache averages for one day
@@ -15,10 +16,11 @@ module.exports = {
      *
      * @param {string} stopId
      * @param {string} tripId
+     * @param {Date} timestamp
      * @returns {Promise<number>} Passenger load time in seconds
      */
-    async getByTrip(stopId, tripId) {
-        const timestampsLog = await getTimestampsLogByTrip(stopId, tripId);
+    async getByTrip(stopId, tripId, timestamp) {
+        const timestampsLog = await getTimestampsLogByTrip(stopId, tripId, timestamp);
 
         if (timestampsLog.length) {
             return sumLoadDurationFromTimestampsLog(timestampsLog);
@@ -35,9 +37,10 @@ module.exports = {
      *
      * @param {string} stopId
      * @param {string} routePatternId
+     * @param {Date} timestamp
      * @returns {Promise<number>} Average passenger load time in seconds
      */
-    async getAverageByRoutePattern(stopId, routePatternId) {
+    async getAverageByRoutePattern(stopId, routePatternId, timestamp) {
         const cacheKey = [stopId, routePatternId].join();
 
         const cachedAverage = averageLoadDurationsCache.get(cacheKey);
@@ -45,7 +48,7 @@ module.exports = {
             return cachedAverage;
         }
 
-        const timestampsLog = await getTimestampsLogByRoutePattern(stopId, routePatternId);
+        const timestampsLog = await getTimestampsLogByRoutePattern(stopId, routePatternId, timestamp);
 
         if (timestampsLog.length) {
             const tripsTotalLoadDuration = sumLoadDurationFromTimestampsLog(timestampsLog);
@@ -76,6 +79,7 @@ module.exports = {
  * @returns {number} Passenger load time in seconds
  */
 function sumLoadDurationFromTimestampsLog(timestampsLog) {
+
     return timestampsLog
         .filter(removeAdjacentDuplicateTimestampsFilter)
         .reduce(groupTimestampsByDoorStatusIntervalReducer, [])
@@ -184,19 +188,31 @@ function sumDoorStatusDurationsReducer(totalDurationInSeconds, doorStatusDuratio
  *
  * @param {string} stopId
  * @param {string} tripId
+ * @param {Date} timestamp Limit returned timestamps logs to
+ *     only those that happened before this point in time
  * @returns {Promise<Array<Object>>}
  */
-function getTimestampsLogByTrip(stopId, tripId) {
+function getTimestampsLogByTrip(stopId, tripId, timestamp) {
+    const whereCondition = {
+        stopId,
+        tripId,
+    };
+
+    if (timestamp) {
+        whereCondition.seenAtStop = {
+            [Sequelize.Op.lte]: timestamp,
+        };
+    }
+
     return db().models.TripStop.findAll({
+        logging: null,
         attributes: ['tripId', 'doorsOpen', 'seenAtStop'],
-        where: {
-            stopId,
-            tripId,
-        },
+        where: whereCondition,
         order: [
             ['seenAtStop', 'ASC'],
         ],
     });
+
 }
 
 /**
@@ -205,9 +221,21 @@ function getTimestampsLogByTrip(stopId, tripId) {
  *
  * @param {string} stopId
  * @param {string} routePatternId
+ * @param {Date} [timestamp] Limit returned timestamps logs to
+ *     only those that happened before this point in time
  * @returns {Promise<Array<Object>>}
  */
-function getTimestampsLogByRoutePattern(stopId, routePatternId) {
+function getTimestampsLogByRoutePattern(stopId, routePatternId, timestamp) {
+    const whereCondition = {
+        stopId,
+    };
+
+    if (timestamp) {
+        whereCondition.seenAtStop = {
+            [Sequelize.Op.lte]: timestamp,
+        };
+    }
+
     return db().models.TripStop.findAll({
         attributes: ['tripId', 'doorsOpen', 'seenAtStop'],
         include: [
@@ -229,9 +257,7 @@ function getTimestampsLogByRoutePattern(stopId, routePatternId) {
                 ],
             },
         ],
-        where: {
-            stopId,
-        },
+        where: whereCondition,
         order: [
             ['seenAtStop', 'ASC'],
         ],
