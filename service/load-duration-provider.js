@@ -3,6 +3,7 @@
 const moment = require('moment-timezone');
 const NodeCache = require('node-cache');
 const { db } = require('@aapokiiso/hsl-congestion-db-schema');
+const Sequelize = require('sequelize');
 
 const averageLoadDurationsCache = new NodeCache({
     stdTTL: 86400, // Cache averages for one day
@@ -45,7 +46,7 @@ module.exports = {
             return cachedAverage;
         }
 
-        const timestampsLog = await getTimestampsLogByRoutePattern(stopId, routePatternId);
+        const timestampsLog = await getTimestampsLogForRoutePatternAverage(stopId, routePatternId);
 
         if (timestampsLog.length) {
             const tripsTotalLoadDuration = sumLoadDurationFromTimestampsLog(timestampsLog);
@@ -200,14 +201,17 @@ function getTimestampsLogByTrip(stopId, tripId) {
 }
 
 /**
- * Looks up all trip stop timestamps gathered for a route pattern.
- * This is a very large set of timestamps!
+ * Looks up all trip stop timestamps gathered for a route pattern
+ * from the last day. An average load duration is calculated based on this.
  *
  * @param {string} stopId
  * @param {string} routePatternId
  * @returns {Promise<Array<Object>>}
  */
-function getTimestampsLogByRoutePattern(stopId, routePatternId) {
+function getTimestampsLogForRoutePatternAverage(stopId, routePatternId) {
+    const now = new Date();
+    const yesterday = (new Date()).setDate(now.getDate() - 1);
+
     return db().models.TripStop.findAll({
         attributes: ['tripId', 'doorsOpen', 'seenAtStop'],
         include: [
@@ -231,6 +235,9 @@ function getTimestampsLogByRoutePattern(stopId, routePatternId) {
         ],
         where: {
             stopId,
+            seenAtStop: {
+                [Sequelize.Op.gt]: yesterday,
+            },
         },
         order: [
             ['seenAtStop', 'ASC'],
