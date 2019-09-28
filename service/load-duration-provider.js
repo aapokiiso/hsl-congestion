@@ -192,20 +192,16 @@ function sumDoorStatusDurationsReducer(totalDurationInSeconds, doorStatusDuratio
  * @returns {Promise<Array<Object>>}
  */
 function getTimestampsLogByTrip(stopId, tripId, timestamp) {
-    const whereCondition = {
-        stopId,
-        tripId,
-    };
-
-    if (timestamp) {
-        whereCondition.seenAtStop = {
-            [Sequelize.Op.lte]: timestamp,
-        };
-    }
-
     return db().models.TripStop.findAll({
+        logging: true,
         attributes: ['tripId', 'doorsOpen', 'seenAtStop'],
-        where: whereCondition,
+        where: {
+            stopId,
+            tripId,
+            seenAtStop: {
+                [Sequelize.Op.lte]: timestamp.toDate(),
+            },
+        },
         order: [
             ['seenAtStop', 'ASC'],
         ],
@@ -218,26 +214,13 @@ function getTimestampsLogByTrip(stopId, tripId, timestamp) {
  *
  * @param {string} stopId
  * @param {string} routePatternId
- * @param {Date} [timestamp] Limit returned timestamps logs to
+ * @param {Date} timestamp Limit returned timestamps logs to
  *     only those that happened before this point in time
  * @returns {Promise<Array<Object>>}
  */
 function getTimestampsLogForRoutePatternAverage(stopId, routePatternId, timestamp) {
-    const now = new Date();
-    const yesterday = (new Date()).setDate(now.getDate() - 1);
-
-    const whereCondition = {
-        stopId,
-        seenAtStop: {
-            [Sequelize.Op.gt]: yesterday,
-        },
-    };
-
-    if (timestamp) {
-        whereCondition.seenAtStop = {
-            [Sequelize.Op.lte]: timestamp,
-        };
-    }
+    // Get yesterday's time range from timestamp if provided. Otherwise use current time.
+    const yesterday = timestamp.clone().add(-1, 'days');
 
     return db().models.TripStop.findAll({
         attributes: ['tripId', 'doorsOpen', 'seenAtStop'],
@@ -260,7 +243,13 @@ function getTimestampsLogForRoutePatternAverage(stopId, routePatternId, timestam
                 ],
             },
         ],
-        where: whereCondition,
+        where: {
+            stopId,
+            seenAtStop: {
+                [Sequelize.Op.gt]: yesterday.toDate(),
+                [Sequelize.Op.lte]: timestamp.toDate(),
+            },
+        },
         order: [
             ['seenAtStop', 'ASC'],
         ],

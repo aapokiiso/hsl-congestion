@@ -2,6 +2,7 @@
 
 const NodeCache = require('node-cache');
 const statusCodes = require('http-status-codes');
+const moment = require('moment-timezone');
 const tripCongestionRateProvider = require('../service/trip-congestion-rate-provider');
 
 const congestionRatesCache = new NodeCache({
@@ -15,10 +16,10 @@ router.get('/trips/:tripId/congestionRate', async function (req, res) {
     const { tripId } = req.params;
     const { timestamp: timestampStr } = req.query;
 
-    const timestamp = timestampStr ? new Date(timestampStr) : null;
+    const timestamp = timestampStr ? moment(timestampStr) : moment();
 
     try {
-        const congestionRate = congestionRatesCache.get([tripId, timestamp].join(''))
+        const congestionRate = congestionRatesCache.get([tripId, timestamp.toString()].join(''))
             || await getTripCongestionRate(tripId, timestamp);
 
         res.status(statusCodes.OK).json(congestionRate);
@@ -41,7 +42,7 @@ async function getTripCongestionRate(tripId, timestamp) {
         congestionRate = null;
     }
 
-    congestionRatesCache.set([tripId, timestamp].join(''), congestionRate);
+    congestionRatesCache.set([tripId, timestamp.toString()].join(''), congestionRate);
 
     return congestionRate;
 }
