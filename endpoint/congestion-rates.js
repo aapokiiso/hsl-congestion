@@ -43,9 +43,7 @@ async function getTripCongestionRate(tripId, timestamp) {
 
     congestionRatesCache.set([tripId, timestamp].join(''), congestionRate);
 
-
     return congestionRate;
-
 }
 
 module.exports = router;

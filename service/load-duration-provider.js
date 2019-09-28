@@ -79,7 +79,6 @@ module.exports = {
  * @returns {number} Passenger load time in seconds
  */
 function sumLoadDurationFromTimestampsLog(timestampsLog) {
-
     return timestampsLog
         .filter(removeAdjacentDuplicateTimestampsFilter)
         .reduce(groupTimestampsByDoorStatusIntervalReducer, [])
@@ -205,7 +204,6 @@ function getTimestampsLogByTrip(stopId, tripId, timestamp) {
     }
 
     return db().models.TripStop.findAll({
-        logging: null,
         attributes: ['tripId', 'doorsOpen', 'seenAtStop'],
         where: whereCondition,
         order: [
