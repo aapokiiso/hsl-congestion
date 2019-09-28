@@ -16,10 +16,11 @@ module.exports = {
      *
      * @param {string} stopId
      * @param {string} tripId
+     * @param {Date} timestamp
      * @returns {Promise<number>} Passenger load time in seconds
      */
-    async getByTrip(stopId, tripId) {
-        const timestampsLog = await getTimestampsLogByTrip(stopId, tripId);
+    async getByTrip(stopId, tripId, timestamp) {
+        const timestampsLog = await getTimestampsLogByTrip(stopId, tripId, timestamp);
 
         if (timestampsLog.length) {
             return sumLoadDurationFromTimestampsLog(timestampsLog);
@@ -36,9 +37,10 @@ module.exports = {
      *
      * @param {string} stopId
      * @param {string} routePatternId
+     * @param {Date} timestamp
      * @returns {Promise<number>} Average passenger load time in seconds
      */
-    async getAverageByRoutePattern(stopId, routePatternId) {
+    async getAverageByRoutePattern(stopId, routePatternId, timestamp) {
         const cacheKey = [stopId, routePatternId].join();
 
         const cachedAverage = averageLoadDurationsCache.get(cacheKey);
@@ -46,7 +48,7 @@ module.exports = {
             return cachedAverage;
         }
 
-        const timestampsLog = await getTimestampsLogForRoutePatternAverage(stopId, routePatternId);
+        const timestampsLog = await getTimestampsLogForRoutePatternAverage(stopId, routePatternId, timestamp);
 
         if (timestampsLog.length) {
             const tripsTotalLoadDuration = sumLoadDurationFromTimestampsLog(timestampsLog);
@@ -185,14 +187,19 @@ function sumDoorStatusDurationsReducer(totalDurationInSeconds, doorStatusDuratio
  *
  * @param {string} stopId
  * @param {string} tripId
+ * @param {Date} timestamp Limit returned timestamps logs to
+ *     only those that happened before this point in time
  * @returns {Promise<Array<Object>>}
  */
-function getTimestampsLogByTrip(stopId, tripId) {
+function getTimestampsLogByTrip(stopId, tripId, timestamp) {
     return db().models.TripStop.findAll({
         attributes: ['tripId', 'doorsOpen', 'seenAtStop'],
         where: {
             stopId,
             tripId,
+            seenAtStop: {
+                [Sequelize.Op.lte]: timestamp.toDate(),
+            },
         },
         order: [
             ['seenAtStop', 'ASC'],
@@ -206,11 +213,13 @@ function getTimestampsLogByTrip(stopId, tripId) {
  *
  * @param {string} stopId
  * @param {string} routePatternId
+ * @param {Date} timestamp Limit returned timestamps logs to
+ *     only those that happened before this point in time
  * @returns {Promise<Array<Object>>}
  */
-function getTimestampsLogForRoutePatternAverage(stopId, routePatternId) {
-    const now = new Date();
-    const yesterday = (new Date()).setDate(now.getDate() - 1);
+function getTimestampsLogForRoutePatternAverage(stopId, routePatternId, timestamp) {
+    // Get yesterday's time range from timestamp if provided. Otherwise use current time.
+    const yesterday = timestamp.clone().add(-1, 'days');
 
     return db().models.TripStop.findAll({
         attributes: ['tripId', 'doorsOpen', 'seenAtStop'],
@@ -236,7 +245,8 @@ function getTimestampsLogForRoutePatternAverage(stopId, routePatternId) {
         where: {
             stopId,
             seenAtStop: {
-                [Sequelize.Op.gt]: yesterday,
+                [Sequelize.Op.gt]: yesterday.toDate(),
+                [Sequelize.Op.lte]: timestamp.toDate(),
             },
         },
         order: [

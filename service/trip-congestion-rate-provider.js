@@ -20,11 +20,12 @@ module.exports = {
      * There is no upper limit for the congestion rate.
      *
      * @param {String} tripId
+     * @param {Date} timestamp
      * @returns {Promise<number>}
      * @throws RoutePatternAverageDurationNotFoundError
      */
-    async getCongestionRate(tripId) {
-        const loadDurations = await getLoadDurations(tripId);
+    async getCongestionRate(tripId, timestamp) {
+        const loadDurations = await getLoadDurations(tripId, timestamp);
 
         const weightedLoadDuration = loadDurations
             .reduce((acc, loadDurations, idx, arr) => {
@@ -55,9 +56,10 @@ module.exports = {
  * sorted by chronological order (eg. 1st stop on route is 1st in array)
  *
  * @param {String} tripId
+ * @param {Date} timestamp
  * @returns {Array<Array<Number, Number>>}
  */
-async function getLoadDurations(tripId) {
+async function getLoadDurations(tripId, timestamp) {
     try {
         const [trip, stopsBeenTo] = await Promise.all([
             tripRepository.getById(tripId),
@@ -66,8 +68,8 @@ async function getLoadDurations(tripId) {
 
         return await Promise.all(
             stopsBeenTo.map(stop => Promise.all([
-                loadDurationProvider.getByTrip(stop.id, tripId),
-                loadDurationProvider.getAverageByRoutePattern(stop.id, trip.routePatternId),
+                loadDurationProvider.getByTrip(stop.id, tripId, timestamp),
+                loadDurationProvider.getAverageByRoutePattern(stop.id, trip.routePatternId, timestamp),
             ]))
         );
     } catch (e) {
