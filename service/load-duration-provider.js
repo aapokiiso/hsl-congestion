@@ -193,7 +193,6 @@ function sumDoorStatusDurationsReducer(totalDurationInSeconds, doorStatusDuratio
  */
 function getTimestampsLogByTrip(stopId, tripId, timestamp) {
     return db().models.TripStop.findAll({
-        logging: true,
         attributes: ['tripId', 'doorsOpen', 'seenAtStop'],
         where: {
             stopId,

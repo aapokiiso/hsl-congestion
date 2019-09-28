@@ -27,8 +27,6 @@ router.get('/trips/:tripId/congestionRate', async function (req, res) {
         console.error(e);
         res.status(statusCodes.INTERNAL_SERVER_ERROR).json({});
     }
-
-
 });
 
 async function getTripCongestionRate(tripId, timestamp) {
