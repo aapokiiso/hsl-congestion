@@ -5,6 +5,7 @@ const NoSuchTripError = require('@aapokiiso/hsl-congestion-trip-repository/src/n
 const tripPastStopsProvider = require('./trip-past-stops-provider');
 const loadDurationProvider = require('./load-duration-provider');
 const RoutePatternAverageDurationNotFoundError = require('../error/route-pattern-average-duration-not-found-error');
+const LoadDurationsUnavailableError = require('../error/load-durations-unavailable-error');
 
 module.exports = {
     /**
@@ -23,9 +24,16 @@ module.exports = {
      * @param {Date} timestamp
      * @returns {Promise<number>}
      * @throws RoutePatternAverageDurationNotFoundError
+     * @throws LoadDurationsUnavailableError
      */
     async getCongestionRate(tripId, timestamp) {
         const loadDurations = await getLoadDurations(tripId, timestamp);
+
+        if (!loadDurations.length) {
+            throw new LoadDurationsUnavailableError(
+                `Failed to find passenger load durations for trip '${tripId}'`
+            );
+        }
 
         const weightedLoadDuration = loadDurations
             .reduce((acc, loadDurations, idx, arr) => {
