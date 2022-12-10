@@ -23,7 +23,7 @@
         "@aapokiiso/hsl-congestion-trip-repository": "^1.0.0",
         "@aapokiiso/hsl-congestion-utils": "^1.0.1",
         "cors": "^2.8.5",
-        "express": "^4.17.1",
+        "express": "^4.17.3",
         "express-enforces-ssl": "^1.1.0",
         "hsts": "^2.2.0",
         "http-status-codes": "^1.3.2",
